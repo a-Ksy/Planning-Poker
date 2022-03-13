@@ -1,10 +1,9 @@
 FROM golang:1.16-alpine
 WORKDIR /app
-COPY go.* ./
+ADD go.* .
 RUN go mod download
-RUN go mod verify
-COPY main.go ./
-RUN go build -o /backend
+COPY . ./
+RUN go build -o /server
 EXPOSE 8080
-CMD [ "/backend" ]
+CMD [ "/server" ]
 
