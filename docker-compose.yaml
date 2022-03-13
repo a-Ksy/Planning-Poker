@@ -1,0 +1,15 @@
+services:
+  redis:
+    container_name: "redis"
+    image: redis:alpine
+    command: redis-server --requirepass mypassword
+    ports: 
+      - "6379:6379"
+
+  go:
+    container_name: "backend"
+    build:
+      # build the image using the Dockerfile we have in this project. Can use an image instead.
+      context: ./backend
+    ports:
+      - "8080:8080"
