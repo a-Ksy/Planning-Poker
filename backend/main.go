@@ -10,15 +10,20 @@ var (
 	userRepository user.Repository = user.NewUserRepository()
 	authService    auth.Service    = auth.NewAuthService(userRepository)
 	authController auth.Controller = auth.NewAuthController(authService)
+	authMiddleware auth.Middleware = auth.NewAuthMiddleware()
 )
 
 func main() {
 	r := gin.Default()
 
+	middleware := authMiddleware.GetMiddleware()
+
 	authRoutes := r.Group("api/auth")
 	{
-		authRoutes.GET("/register", authController.Register)
+		authRoutes.GET("/login", authController.Register, middleware.LoginHandler)
 	}
+
+	authRoutes.Use(middleware.MiddlewareFunc())
 
 	r.Run()
 }

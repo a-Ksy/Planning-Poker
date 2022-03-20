@@ -15,6 +15,6 @@ func NewAuthController(service Service) Controller {
 }
 
 func (c *controller) Register(ctx *gin.Context) {
-	dummy := c.service.CreateUser()
-	ctx.JSON(200, gin.H{"message": dummy})
+	// dummy := c.service.CreateUser()
+	// ctx.JSON(200, gin.H{"message": dummy})
 }
