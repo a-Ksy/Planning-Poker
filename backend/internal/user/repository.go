@@ -1,9 +1,13 @@
 package user
 
+import db "github.com/a-Ksy/Planning-Poker/backend/pkg/dbcontext"
+
 type Repository interface{}
 
-type repository struct{}
+type repository struct {
+	db db.DBContext
+}
 
-func NewUserRepository() Repository {
-	return &repository{}
+func NewUserRepository(db db.DBContext) Repository {
+	return &repository{db}
 }

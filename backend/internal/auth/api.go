@@ -1,6 +1,11 @@
 package auth
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/a-Ksy/Planning-Poker/backend/internal/auth/dto"
+	"github.com/gin-gonic/gin"
+)
 
 type Controller interface {
 	Register(ctx *gin.Context)
@@ -15,6 +20,11 @@ func NewAuthController(service Service) Controller {
 }
 
 func (c *controller) Register(ctx *gin.Context) {
-	// dummy := c.service.CreateUser()
+	var register dto.Register
+	if err := ctx.BindJSON(&register); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, "Invalid request body")
+	}
+
+	// dummy := c.service.CreateUser(register.Username)
 	// ctx.JSON(200, gin.H{"message": dummy})
 }

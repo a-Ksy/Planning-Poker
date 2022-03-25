@@ -2,8 +2,7 @@ FROM golang:1.16-alpine
 WORKDIR /app
 ADD go.* .
 RUN go mod download
+RUN go get github.com/githubnemo/CompileDaemon
 COPY . ./
-RUN go build -o /server
 EXPOSE 8080
-CMD [ "/server" ]
-
+ENTRYPOINT CompileDaemon --build="go build main.go" --command="./main"
