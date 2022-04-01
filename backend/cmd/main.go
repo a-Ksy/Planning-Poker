@@ -5,21 +5,25 @@ import (
 	"github.com/a-Ksy/Planning-Poker/backend/internal/room"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	db "github.com/a-Ksy/Planning-Poker/backend/pkg/dbcontext"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
 var (
+	logger         log.Logger      = log.New()
 	database       db.DBContext    = db.SetupDatabaseConnection()
-	userRepository user.Repository = user.NewUserRepository(database)
-	authService    auth.Service    = auth.NewAuthService(userRepository)
-	authController auth.Controller = auth.NewAuthController(authService)
+	userRepository user.Repository = user.NewUserRepository(database, logger)
+	authService    auth.Service    = auth.NewAuthService(userRepository, logger)
+	authController auth.Controller = auth.NewAuthController(authService, logger)
 	authMiddleware auth.Middleware = auth.NewAuthMiddleware()
-	roomRepository room.Repository = room.NewRoomRepository(database)
-	roomService    room.Service    = room.NewRoomService(roomRepository)
-	roomController room.Controller = room.NewRoomController(roomService)
+	roomRepository room.Repository = room.NewRoomRepository(database, logger)
+	roomService    room.Service    = room.NewRoomService(roomRepository, logger)
+	roomController room.Controller = room.NewRoomController(roomService, logger)
 )
 
 func main() {
+	defer database.Close()
+
 	r := gin.Default()
 
 	middleware := authMiddleware.GetMiddleware()

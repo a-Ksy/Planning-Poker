@@ -1,6 +1,9 @@
 package room
 
 import (
+	"fmt"
+
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/google/uuid"
 )
 
@@ -11,10 +14,11 @@ type Service interface {
 
 type service struct {
 	roomRepository Repository
+	logger         log.Logger
 }
 
-func NewRoomService(roomRepository Repository) Service {
-	return &service{roomRepository}
+func NewRoomService(roomRepository Repository, logger log.Logger) Service {
+	return &service{roomRepository, logger}
 }
 
 func (s *service) CreateRoom(roomName string) (Room, error) {
@@ -28,6 +32,7 @@ func (s *service) CreateRoom(roomName string) (Room, error) {
 func (s *service) GetRoom(roomId string) (Room, error) {
 	room, err := s.roomRepository.GetRoom(roomId)
 	if err != nil {
+		s.logger.Error(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return Room{}, err
 	}
 

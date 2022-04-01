@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 )
 
 type Service interface {
@@ -12,10 +13,11 @@ type Service interface {
 
 type service struct {
 	userRepository user.Repository
+	logger         log.Logger
 }
 
-func NewAuthService(userRepository user.Repository) Service {
-	return &service{userRepository}
+func NewAuthService(userRepository user.Repository, logger log.Logger) Service {
+	return &service{userRepository, logger}
 }
 
 func (s *service) CreateUser(username string) string {

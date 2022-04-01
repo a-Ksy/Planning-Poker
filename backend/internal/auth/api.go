@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/auth/dto"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,10 +14,11 @@ type Controller interface {
 
 type controller struct {
 	service Service
+	logger  log.Logger
 }
 
-func NewAuthController(service Service) Controller {
-	return &controller{service}
+func NewAuthController(service Service, logger log.Logger) Controller {
+	return &controller{service, logger}
 }
 
 func (c *controller) Register(ctx *gin.Context) {

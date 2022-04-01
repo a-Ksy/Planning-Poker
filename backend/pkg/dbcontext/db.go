@@ -10,6 +10,7 @@ import (
 type DBContext interface {
 	Set(key string, value interface{}) error
 	Get(key string, dest interface{}) error
+	Close() error
 }
 
 type dbcontext struct {
@@ -41,4 +42,8 @@ func (c *dbcontext) Get(key string, dest interface{}) error {
 		return err
 	}
 	return json.Unmarshal(p, dest)
+}
+
+func (c *dbcontext) Close() error {
+	return c.rdb.Close()
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	db "github.com/a-Ksy/Planning-Poker/backend/pkg/dbcontext"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 )
 
 type Repository interface {
@@ -14,15 +15,17 @@ type Repository interface {
 }
 
 type repository struct {
-	db db.DBContext
+	db     db.DBContext
+	logger log.Logger
 }
 
-func NewRoomRepository(db db.DBContext) Repository {
-	return &repository{db}
+func NewRoomRepository(db db.DBContext, logger log.Logger) Repository {
+	return &repository{db, logger}
 }
 
 func (r *repository) CreateRoom(newRoom Room) error {
 	if err := r.db.Get(newRoom.Id, &Room{}); err == nil {
+		r.logger.Error(fmt.Sprintln("Room with", newRoom.Id, "already exists"))
 		return errors.New(fmt.Sprintln("Room with", newRoom.Id, "already exists"))
 	}
 
@@ -32,6 +35,7 @@ func (r *repository) CreateRoom(newRoom Room) error {
 	}
 
 	if err := r.db.Set(newRoom.Id, jsonData); err != nil {
+		fmt.Sprintln(fmt.Sprintln("Error creating a room with id", newRoom.Id))
 		return errors.New(fmt.Sprintln("Error creating a room with id", newRoom.Id))
 	}
 
