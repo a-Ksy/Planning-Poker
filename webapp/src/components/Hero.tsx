@@ -1,17 +1,25 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading, VStack, Container, Text } from "@chakra-ui/react";
 
-export const Hero = ({ title }: { title: string }) => (
-  <Flex
-    justifyContent="center"
-    alignItems="center"
-    height="100vh"
-    bgGradient="linear(to-l, #7928CA, #FF0080)"
-    bgClip="text"
-  >
-    <Heading fontSize="6vw">{title}</Heading>
+export const Hero = ({
+  title,
+  subText,
+}: {
+  title: string;
+  subText: string;
+}) => (
+  <Flex height="100vh" justifyContent="center" alignItems="center">
+    <VStack spacing="3rem">
+      <Container centerContent maxW='container.xl'> 
+        <Heading fontSize="6vw">{title}</Heading>
+      </Container>
+      <Container centerContent maxW='container.xl'>
+        <Text fontSize="2xl">{subText}</Text>
+      </Container>
+    </VStack>
   </Flex>
-)
+);
 
 Hero.defaultProps = {
-  title: 'with-chakra-ui-typescript',
-}
+  title: "Planning Poker 🎲",
+  subText: "Plan your next Sprint by voting on tasks!",
+};
