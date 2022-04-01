@@ -17,9 +17,9 @@ services:
     - "8081:8081"
 
   go:
-    container_name: "backend"
+    container_name: "api"
     build:
-      context: ./backend
+      context: ./api
       dockerfile: cmd/Dockerfile
     ports:
       - "8080:8080"
