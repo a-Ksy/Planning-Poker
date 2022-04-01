@@ -3,6 +3,8 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
+import Link from "next/link";
+
 
 import { Hero } from "../components/Hero";
 import { Container } from "../components/Container";
@@ -14,9 +16,11 @@ const Index = () => (
     <DarkModeSwitch />
     <Hero />
     <Container justifyContent="center" py={2}>
+    <Link href="/newgame">
       <Button variant="solid" colorScheme="red" size="lg">
         Start new game
       </Button>
+      </Link>
     </Container>
     <Footer>
       <ChakraLink isExternal href="https://github.com/a-Ksy/Planning-Poker">
