@@ -3,12 +3,13 @@ package room
 import (
 	"fmt"
 
+	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/google/uuid"
 )
 
 type Service interface {
-	CreateRoom(roomName string) (Room, error)
+	CreateRoom(roomName string, adminUsername string) (Room, error)
 	GetRoom(roomId string) (Room, error)
 }
 
@@ -21,8 +22,10 @@ func NewRoomService(roomRepository Repository, logger log.Logger) Service {
 	return &service{roomRepository, logger}
 }
 
-func (s *service) CreateRoom(roomName string) (Room, error) {
-	newRoom := Room{Id: uuid.New().String(), Name: roomName}
+func (s *service) CreateRoom(roomName string, adminUsername string) (Room, error) {
+	newRoom := Room{
+		Id: uuid.New().String(), Name: roomName,
+		Admin: user.User{Id: uuid.New().String(), Name: adminUsername}}
 	if err := s.roomRepository.CreateRoom(newRoom); err != nil {
 		return Room{}, err
 	}
