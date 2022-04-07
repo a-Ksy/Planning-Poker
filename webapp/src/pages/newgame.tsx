@@ -3,6 +3,7 @@ import { FormControl, Input, Text, Stack, Box, Button } from "@chakra-ui/react";
 import Link from "next/link";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
+import { ArrowForwardIcon } from '@chakra-ui/icons'
 
 function NewGame() {
 
@@ -31,8 +32,8 @@ function NewGame() {
                 />
               </FormControl>
               <Link href="/newplayer">
-                <Button type="submit" width="full" colorScheme="red" isDisabled={name === ''}>
-                  Create Game
+                <Button type="submit" width="full" colorScheme="red" isDisabled={name === ''} rightIcon={<ArrowForwardIcon />}>
+                  Next
                 </Button>
               </Link>
             </Stack>
