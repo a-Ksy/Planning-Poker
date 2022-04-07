@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { FormControl, Input, Text, Stack, Box, Button } from "@chakra-ui/react";
-import Link from "next/link";
+import {
+  FormControl,
+  Input,
+  Text,
+  Stack,
+  Box,
+  Button,
+  FormHelperText,
+} from "@chakra-ui/react";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
-function NewGame() {
-
+function NewPlayer() {
   const [name, setName] = useState("");
   const handleNameChange = (e) => setName(e.target.value);
 
@@ -19,22 +25,21 @@ function NewGame() {
         alignItems="center"
       >
         <Stack flexDir="column" justifyContent="center" alignItems="center">
-          <Text fontSize="3xl">Choose a name for your game</Text>
+          <Text fontSize="3xl">Choose a display name</Text>
           <Box minW={{ base: "90%", md: "468px" }}>
             <Stack spacing="4rem" p="2rem">
               <FormControl isRequired>
                 <Input
                   id="name"
-                  placeholder="e.g sprint-planning-2"
+                  placeholder="e.g pokerface12"
                   value={name}
                   onChange={handleNameChange}
                 />
+                <FormHelperText>Just to let other players know who you are 🌱</FormHelperText>
               </FormControl>
-              <Link href="/newplayer">
-                <Button type="submit" width="full" colorScheme="red" isDisabled={name === ''}>
-                  Create Game
-                </Button>
-              </Link>
+              <Button type="submit" width="full" colorScheme="green" isDisabled={name === ''}>
+                  Let's begin!
+              </Button>
             </Stack>
           </Box>
         </Stack>
@@ -43,4 +48,4 @@ function NewGame() {
   );
 }
 
-export default NewGame;
+export default NewPlayer;
