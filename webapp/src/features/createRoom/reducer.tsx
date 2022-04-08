@@ -4,11 +4,18 @@ import { setRoomName, setUsername, createRoom } from "./actions";
 type CreateRoomState = {
   roomName: string;
   username: string;
+  room: Room;
+};
+
+export type Room = {
+  id: string;
+  name: string;
 };
 
 const initialState: CreateRoomState = {
   roomName: "my-planning-poker-room",
   username: "admin",
+  room: null,
 };
 
 export const createRoomReducer = createReducer(initialState, (builder) => {
@@ -19,7 +26,7 @@ export const createRoomReducer = createReducer(initialState, (builder) => {
     .addCase(setUsername, (state, action) => {
       state.username = action.payload;
     })
-    .addCase(createRoom, (state, action) => {
-      state.username = action.payload;
+    .addCase(createRoom.fulfilled, (state, { payload }) => {
+      state.room = payload;
     });
 });

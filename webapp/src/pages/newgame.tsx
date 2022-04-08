@@ -5,7 +5,7 @@ import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch } from "../app/hooks";
 import { setRoomName } from "../features/createRoom";
 
 function NewGame() {

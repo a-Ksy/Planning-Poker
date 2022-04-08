@@ -11,9 +11,23 @@ import {
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { setUsername, createRoom } from "../features/createRoom";
+
 function NewPlayer() {
   const [name, setName] = useState("");
-  const handleNameChange = (e) => setName(e.target.value);
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+  const dispatch = useAppDispatch();
+  const { roomName }: { roomName: string } = useAppSelector(
+    (state) => state.createRoom
+  );
+
+  const handleCreateRoom = () => {
+    dispatch(setUsername(name));
+    dispatch(createRoom({ roomName, username: name }));
+  };
 
   return (
     <Box height="100vh">
@@ -44,6 +58,7 @@ function NewPlayer() {
                 width="full"
                 colorScheme="green"
                 isDisabled={name === ""}
+                onClick={() => handleCreateRoom()}
               >
                 Let's begin!
               </Button>
