@@ -35,10 +35,17 @@ function NewPlayer() {
                   value={name}
                   onChange={handleNameChange}
                 />
-                <FormHelperText>Just to let other players know who you are 🌱</FormHelperText>
+                <FormHelperText>
+                  Just to let other players know who you are 🌱
+                </FormHelperText>
               </FormControl>
-              <Button type="submit" width="full" colorScheme="green" isDisabled={name === ''}>
-                  Let's begin!
+              <Button
+                type="submit"
+                width="full"
+                colorScheme="green"
+                isDisabled={name === ""}
+              >
+                Let's begin!
               </Button>
             </Stack>
           </Box>

@@ -1,5 +1,5 @@
-import { createReducer } from '@reduxjs/toolkit';
-import { getKanyeQuote } from './actions';
+import { createReducer } from "@reduxjs/toolkit";
+import { getKanyeQuote } from "./actions";
 
 export type KanyeState = {
   data: { quote: string };
@@ -8,7 +8,7 @@ export type KanyeState = {
 };
 
 const initialState: KanyeState = {
-  data: { quote: 'click that button' },
+  data: { quote: "click that button" },
   pending: false,
   error: false,
 };

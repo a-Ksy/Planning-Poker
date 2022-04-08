@@ -9,10 +9,10 @@ export const Hero = ({
 }) => (
   <Flex height="100vh" justifyContent="center" alignItems="center">
     <VStack spacing="3rem">
-      <Container centerContent maxW='container.xl'> 
+      <Container centerContent maxW="container.xl">
         <Heading fontSize="6vw">{title}</Heading>
       </Container>
-      <Container centerContent maxW='container.xl'>
+      <Container centerContent maxW="container.xl">
         <Text fontSize="2xl">{subText}</Text>
       </Container>
     </VStack>
