@@ -3,13 +3,16 @@ import { FormControl, Input, Text, Stack, Box, Button } from "@chakra-ui/react";
 import Link from "next/link";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
-import { ArrowForwardIcon } from '@chakra-ui/icons'
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { setRoomName } from "../features/createRoom";
 
 function NewGame() {
-
   const [name, setName] = useState("");
   const handleNameChange = (e) => setName(e.target.value);
 
+  const dispatch = useAppDispatch();
   return (
     <Box height="100vh">
       <Navbar />
@@ -32,7 +35,14 @@ function NewGame() {
                 />
               </FormControl>
               <Link href="/newplayer">
-                <Button type="submit" width="full" colorScheme="red" isDisabled={name === ''} rightIcon={<ArrowForwardIcon />}>
+                <Button
+                  type="submit"
+                  width="full"
+                  colorScheme="red"
+                  isDisabled={name === ""}
+                  rightIcon={<ArrowForwardIcon />}
+                  onClick={() => dispatch(setRoomName(name))}
+                >
                   Next
                 </Button>
               </Link>
