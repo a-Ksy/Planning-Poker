@@ -8,11 +8,12 @@ import {
   Button,
   FormHelperText,
 } from "@chakra-ui/react";
+import router from "next/router";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
 import { useAppDispatch } from "../app/hooks";
-import { createRoom } from "../features/room";
+import { createRoom, Room } from "../features/room";
 import { setName } from "../features/user";
 import { localConstants } from "../constants";
 
@@ -33,11 +34,16 @@ function NewPlayer() {
   };
 
   const handleCreateRoom = () => {
+    // Set name to local storage and redux
     localStorage.setItem(localConstants.USERNAME_KEY, name);
     dispatch(setName(name));
 
+    // Create the room and route to the room
     const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
-    dispatch(createRoom({ roomName, username: name }));
+    dispatch(createRoom({ roomName, username: name })).then((data) => {
+      const room: Room = data.payload;
+      router.push(`/game/${room.id}`);
+    });
   };
 
   return (
