@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Text, Stack, Box } from "@chakra-ui/react";
 import { Navbar } from "../../components/Navbar";
 import { Container } from "../../components/Container";
-import { PokerTable } from "../../components/PokerTable";
 
 import { useAppDispatch } from "../../app/hooks";
+import { Poker } from "../../components/Poker";
 
 function Game() {
   const dispatch = useAppDispatch();
@@ -18,7 +18,7 @@ function Game() {
         justifyContent="center"
         alignItems="center"
       >
-        <PokerTable />
+        <Poker />
       </Container>
     </Box>
   );
