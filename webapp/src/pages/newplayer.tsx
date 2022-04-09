@@ -50,7 +50,9 @@ function NewPlayer() {
         alignItems="center"
       >
         <Stack flexDir="column" justifyContent="center" alignItems="center">
-          <Text fontSize="3xl">Choose a display name</Text>
+          <Text fontSize={{ base: "2xl", md: "2xl", lg: "3xl" }}>
+            Choose a display name
+          </Text>
           <Box minW={{ base: "90%", md: "468px" }}>
             <Stack spacing="4rem" p="2rem">
               <FormControl isRequired>

@@ -10,10 +10,12 @@ export const Hero = ({
   <Flex height="100vh" justifyContent="center" alignItems="center">
     <VStack spacing="3rem">
       <Container centerContent maxW="container.xl">
-        <Heading fontSize="6vw">{title}</Heading>
+        <Heading fontSize={{ base: "4xl", md: "6xl", lg: "8xl" }}>
+          {title}
+        </Heading>
       </Container>
       <Container centerContent maxW="container.xl">
-        <Text fontSize="2xl">{subText}</Text>
+        <Text fontSize={{ base: "lg", md: "2xl", lg: "4xl" }}>{subText}</Text>
       </Container>
     </VStack>
   </Flex>
