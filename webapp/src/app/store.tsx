@@ -6,12 +6,10 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import { createRoomReducer } from "../features/createRoom";
-import { kanyeReducer } from "../features/kanye";
+import { roomReducer } from "../features/room";
 
 const combinedReducer = combineReducers({
-  createRoom: createRoomReducer,
-  kanyeQuote: kanyeReducer,
+  room: roomReducer,
 });
 
 const reducer = (

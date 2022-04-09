@@ -5,14 +5,10 @@ import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
-import { useAppDispatch } from "../app/hooks";
-import { setRoomName } from "../features/createRoom";
-
 function NewGame() {
   const [name, setName] = useState("");
   const handleNameChange = (e) => setName(e.target.value);
 
-  const dispatch = useAppDispatch();
   return (
     <Box height="100vh">
       <Navbar />
@@ -41,7 +37,7 @@ function NewGame() {
                   colorScheme="red"
                   isDisabled={name === ""}
                   rightIcon={<ArrowForwardIcon />}
-                  onClick={() => dispatch(setRoomName(name))}
+                  onClick={() => localStorage.setItem("roomName", name)}
                 >
                   Next
                 </Button>

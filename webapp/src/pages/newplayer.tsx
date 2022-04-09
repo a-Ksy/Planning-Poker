@@ -12,20 +12,21 @@ import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { setUsername, createRoom } from "../features/createRoom";
+import { createRoom } from "../features/room";
+import { setName } from "../features/user";
 
 function NewPlayer() {
-  const [name, setName] = useState("");
+  const [name, setUsername] = useState("");
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    setUsername(e.target.value);
   };
+
   const dispatch = useAppDispatch();
-  const { roomName }: { roomName: string } = useAppSelector(
-    (state) => state.createRoom
-  );
 
   const handleCreateRoom = () => {
-    dispatch(setUsername(name));
+    dispatch(setName(name));
+
+    const roomName: string = localStorage.getItem("roomName");
     dispatch(createRoom({ roomName, username: name }));
   };
 
