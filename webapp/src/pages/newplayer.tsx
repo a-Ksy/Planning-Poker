@@ -25,12 +25,12 @@ function getStoredUsername(): string {
 }
 
 function NewPlayer() {
+  const dispatch = useAppDispatch();
+
   const [name, setUsername] = useState(getStoredUsername());
   const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
-
-  const dispatch = useAppDispatch();
 
   const handleCreateRoom = () => {
     localStorage.setItem(localConstants.USERNAME_KEY, name);
