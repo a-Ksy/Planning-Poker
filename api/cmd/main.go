@@ -7,6 +7,7 @@ import (
 	db "github.com/a-Ksy/Planning-Poker/backend/pkg/dbcontext"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 var (
@@ -25,6 +26,7 @@ func main() {
 	defer database.Close()
 
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	middleware := authMiddleware.GetMiddleware()
 
