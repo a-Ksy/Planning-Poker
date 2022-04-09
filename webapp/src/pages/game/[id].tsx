@@ -2,11 +2,9 @@ import { useState } from "react";
 import { Text, Stack, Box } from "@chakra-ui/react";
 import { Navbar } from "../../components/Navbar";
 import { Container } from "../../components/Container";
+import { PokerTable } from "../../components/PokerTable";
 
 import { useAppDispatch } from "../../app/hooks";
-import { createRoom } from "../../features/room";
-import { setName } from "../../features/user";
-import { localConstants } from "../../constants";
 
 function Game() {
   const dispatch = useAppDispatch();
@@ -20,9 +18,7 @@ function Game() {
         justifyContent="center"
         alignItems="center"
       >
-        <Stack flexDir="column" justifyContent="center" alignItems="center">
-          <Text fontSize={{ base: "2xl", md: "2xl", lg: "3xl" }}>Game</Text>
-        </Stack>
+        <PokerTable />
       </Container>
     </Box>
   );
