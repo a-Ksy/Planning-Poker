@@ -4,9 +4,18 @@ import Link from "next/link";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { localConstants } from "../constants";
+
+function getStoredRoomName(): string {
+  const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
+  if (roomName === null || roomName === undefined) {
+    return "";
+  }
+  return roomName;
+}
 
 function NewGame() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(getStoredRoomName());
   const handleNameChange = (e) => setName(e.target.value);
 
   return (
@@ -37,7 +46,9 @@ function NewGame() {
                   colorScheme="red"
                   isDisabled={name === ""}
                   rightIcon={<ArrowForwardIcon />}
-                  onClick={() => localStorage.setItem("roomName", name)}
+                  onClick={() =>
+                    localStorage.setItem(localConstants.ROOM_NAME_KEY, name)
+                  }
                 >
                   Next
                 </Button>

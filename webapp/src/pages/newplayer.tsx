@@ -11,12 +11,21 @@ import {
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch } from "../app/hooks";
 import { createRoom } from "../features/room";
 import { setName } from "../features/user";
+import { localConstants } from "../constants";
+
+function getStoredUsername(): string {
+  const username: string = localStorage.getItem(localConstants.USERNAME_KEY);
+  if (username === null || username === undefined) {
+    return "";
+  }
+  return username;
+}
 
 function NewPlayer() {
-  const [name, setUsername] = useState("");
+  const [name, setUsername] = useState(getStoredUsername());
   const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -24,9 +33,10 @@ function NewPlayer() {
   const dispatch = useAppDispatch();
 
   const handleCreateRoom = () => {
+    localStorage.setItem(localConstants.USERNAME_KEY, name);
     dispatch(setName(name));
 
-    const roomName: string = localStorage.getItem("roomName");
+    const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
     dispatch(createRoom({ roomName, username: name }));
   };
 
