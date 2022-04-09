@@ -15,7 +15,9 @@ export const Hero = ({
         </Heading>
       </Container>
       <Container centerContent maxW="container.xl">
-        <Text fontSize={{ base: "lg", md: "2xl", lg: "4xl" }}>{subText}</Text>
+        <Text fontSize={{ base: "lg", md: "2xl", lg: "4xl" }} color="gray">
+          {subText}
+        </Text>
       </Container>
     </VStack>
   </Flex>
