@@ -6,10 +6,7 @@ export const Poker = () => {
   let numPlayers = 8;
 
   function isCardVisible(index: number): boolean {
-    if (index >= 0 && index < numPlayers) {
-      return true;
-    }
-    return false;
+    return index >= 0 && index < numPlayers;
   }
 
   return (
