@@ -1,13 +1,13 @@
 import { Box, Center, Text } from "@chakra-ui/react";
+import { User } from "../features/user";
+import { useAppSelector } from "../app/hooks";
 
 export const PokerCard = (props) => {
-  const {
-    index,
-    closed,
-    isCardVisible,
-  }: { index: number; closed: boolean; isCardVisible: Function } = props;
+  const { closed, user }: { closed: boolean; user: User } = props;
 
-  if (!isCardVisible(index)) {
+  const { admin }: { admin: User } = useAppSelector((state) => state.room);
+
+  if (user == undefined || user == null) {
     return null;
   }
 
@@ -20,6 +20,7 @@ export const PokerCard = (props) => {
           borderRadius="xl"
           h="5rem"
           w="3rem"
+          border={admin.id === user.id && "3px solid #ECC94B"}
         />
       </Center>
       <Center>
@@ -30,7 +31,7 @@ export const PokerCard = (props) => {
           fontWeight="semibold"
           maxWidth="6rem"
         >
-          Atahan
+          {user.name}
         </Text>
       </Center>
     </Box>

@@ -1,13 +1,10 @@
 import { Grid, GridItem, Flex, Spacer, Center } from "@chakra-ui/react";
 import { PokerCard } from "./PokerCard";
 import { PokerTable } from "./PokerTable";
+import { useAppSelector } from "../app/hooks";
 
 export const Poker = () => {
-  let numPlayers = 8;
-
-  function isCardVisible(index: number): boolean {
-    return index >= 0 && index < numPlayers;
-  }
+  const { users } = useAppSelector((state) => state.room);
 
   return (
     <Grid
@@ -21,23 +18,23 @@ export const Poker = () => {
       gridTemplateRows="8rem 1fr 8rem"
     >
       <GridItem>
-        <PokerCard index={8} isCardVisible={isCardVisible} />
+        <PokerCard user={users[8]} />
       </GridItem>
       <GridItem>
         <Flex>
-          <PokerCard index={4} isCardVisible={isCardVisible} />
+          <PokerCard user={users[4]} />
           <Spacer />
-          <PokerCard index={0} closed isCardVisible={isCardVisible} />
+          <PokerCard closed user={users[0]} />
           <Spacer />
-          <PokerCard index={5} isCardVisible={isCardVisible} />
+          <PokerCard user={users[5]} />
         </Flex>
       </GridItem>
       <GridItem>
-        <PokerCard index={9} isCardVisible={isCardVisible} />
+        <PokerCard user={users[9]} />
       </GridItem>
       <GridItem>
         <Center h="100%">
-          <PokerCard index={2} isCardVisible={isCardVisible} />
+          <PokerCard user={users[2]} />
         </Center>
       </GridItem>
       <GridItem>
@@ -45,23 +42,23 @@ export const Poker = () => {
       </GridItem>
       <GridItem>
         <Center h="100%">
-          <PokerCard index={3} isCardVisible={isCardVisible} />
+          <PokerCard user={users[3]} />
         </Center>
       </GridItem>
       <GridItem mt={5}>
-        <PokerCard index={10} isCardVisible={isCardVisible} />
+        <PokerCard user={users[10]} />
       </GridItem>
       <GridItem mt={5}>
         <Flex>
-          <PokerCard index={6} isCardVisible={isCardVisible} />
+          <PokerCard user={users[6]} />
           <Spacer />
-          <PokerCard index={1} isCardVisible={isCardVisible} />
+          <PokerCard user={users[1]} />
           <Spacer />
-          <PokerCard index={7} isCardVisible={isCardVisible} />
+          <PokerCard user={users[7]} />
         </Flex>
       </GridItem>
       <GridItem mt={5}>
-        <PokerCard index={11} isCardVisible={isCardVisible} />
+        <PokerCard user={users[11]} />
       </GridItem>
     </Grid>
   );
