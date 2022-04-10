@@ -1,4 +1,5 @@
-import { Flex, Box, Center, Text, Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Flex, Spacer, Center } from "@chakra-ui/react";
+import { PokerCard } from "./PokerCard";
 import { PokerTable } from "./PokerTable";
 
 export const Poker = () => {
@@ -13,17 +14,41 @@ export const Poker = () => {
       gridTemplateColumns="12rem 1fr 12rem"
       gridTemplateRows="8rem 1fr 8rem"
     >
-      <GridItem bg="tomato" />
-      <GridItem bg="tomato" />
-      <GridItem bg="tomato" />
-      <GridItem bg="tomato" />
+      <GridItem />
+      <GridItem>
+        <Flex>
+          <PokerCard />
+          <Spacer />
+          <PokerCard hidden />
+          <Spacer />
+          <PokerCard />
+        </Flex>
+      </GridItem>
+      <GridItem />
+      <GridItem>
+        <Center h="100%">
+          <PokerCard />
+        </Center>
+      </GridItem>
       <GridItem>
         <PokerTable />
       </GridItem>
-      <GridItem bg="tomato" />
-      <GridItem bg="tomato" />
-      <GridItem bg="tomato" />
-      <GridItem bg="tomato" />
+      <GridItem>
+        <Center h="100%">
+          <PokerCard />
+        </Center>
+      </GridItem>
+      <GridItem />
+      <GridItem mt={5}>
+        <Flex>
+          <PokerCard />
+          <Spacer />
+          <PokerCard />
+          <Spacer />
+          <PokerCard />
+        </Flex>
+      </GridItem>
+      <GridItem />
     </Grid>
   );
 };
