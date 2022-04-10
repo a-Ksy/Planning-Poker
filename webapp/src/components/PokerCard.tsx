@@ -14,7 +14,13 @@ export const PokerCard = (props) => {
           w="3rem"
         />
       </Center>
-      <Text isTruncated maxWidth="6rem" textAlign="center" mt={1}>
+      <Text
+        isTruncated
+        maxWidth="6rem"
+        textAlign="center"
+        mt={1.5}
+        fontWeight="semibold"
+      >
         Atahan
       </Text>
     </Box>
