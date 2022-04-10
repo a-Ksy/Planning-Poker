@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/a-Ksy/Planning-Poker/backend/internal/auth"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -37,7 +38,6 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, "'roomName' or 'username' field is not provided")
 		return
 	}
-
 	c.logger.Info(fmt.Sprintln("CreateRoom called with roomName:", roomCreation.RoomName, "and admin username:", roomCreation.Username))
 
 	room, err := c.service.CreateRoom(roomCreation.RoomName, roomCreation.Username)
@@ -45,9 +45,22 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusConflict, err)
 		return
 	}
-
 	c.logger.Info(fmt.Sprintln("Created room:", room))
-	ctx.AbortWithStatusJSON(http.StatusCreated, room)
+
+	t, err := auth.GenerateToken(ctx, room.Admin.Id, room.Id, true)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.AbortWithStatusJSON(http.StatusCreated,
+		CreatedRoomWithUser{
+			auth.UserWithToken{
+				Id:        room.Admin.Id,
+				Name:      room.Admin.Name,
+				Token:     t.Token,
+				ExpiresAt: t.ExpiresAt},
+			room})
 }
 
 // TODO: Only authorized people for this room should be able to retrieve data
