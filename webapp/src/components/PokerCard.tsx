@@ -1,13 +1,21 @@
 import { Box, Center, Text } from "@chakra-ui/react";
 
 export const PokerCard = (props) => {
-  const { hidden } = props;
+  const {
+    index,
+    closed,
+    isCardVisible,
+  }: { index: number; closed: boolean; isCardVisible: Function } = props;
+
+  if (!isCardVisible(index)) {
+    return null;
+  }
 
   return (
     <Box>
       <Center>
         <Box
-          bg={hidden ? "blue.300" : "gray.200"}
+          bg={closed ? "blue.300" : "gray.200"}
           p={4}
           borderRadius="xl"
           h="5rem"

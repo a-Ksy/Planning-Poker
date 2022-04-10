@@ -3,6 +3,15 @@ import { PokerCard } from "./PokerCard";
 import { PokerTable } from "./PokerTable";
 
 export const Poker = () => {
+  let numPlayers = 8;
+
+  function isCardVisible(index: number): boolean {
+    if (index >= 0 && index < numPlayers) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <Grid
       gap="0.8rem"
@@ -15,23 +24,23 @@ export const Poker = () => {
       gridTemplateRows="8rem 1fr 8rem"
     >
       <GridItem>
-        <PokerCard />
+        <PokerCard index={8} isCardVisible={isCardVisible} />
       </GridItem>
       <GridItem>
         <Flex>
-          <PokerCard />
+          <PokerCard index={4} isCardVisible={isCardVisible} />
           <Spacer />
-          <PokerCard hidden />
+          <PokerCard index={0} closed isCardVisible={isCardVisible} />
           <Spacer />
-          <PokerCard />
+          <PokerCard index={5} isCardVisible={isCardVisible} />
         </Flex>
       </GridItem>
       <GridItem>
-        <PokerCard />
+        <PokerCard index={9} isCardVisible={isCardVisible} />
       </GridItem>
       <GridItem>
         <Center h="100%">
-          <PokerCard />
+          <PokerCard index={2} isCardVisible={isCardVisible} />
         </Center>
       </GridItem>
       <GridItem>
@@ -39,23 +48,23 @@ export const Poker = () => {
       </GridItem>
       <GridItem>
         <Center h="100%">
-          <PokerCard />
+          <PokerCard index={3} isCardVisible={isCardVisible} />
         </Center>
       </GridItem>
       <GridItem mt={5}>
-        <PokerCard />
+        <PokerCard index={10} isCardVisible={isCardVisible} />
       </GridItem>
       <GridItem mt={5}>
         <Flex>
-          <PokerCard />
+          <PokerCard index={6} isCardVisible={isCardVisible} />
           <Spacer />
-          <PokerCard />
+          <PokerCard index={1} isCardVisible={isCardVisible} />
           <Spacer />
-          <PokerCard />
+          <PokerCard index={7} isCardVisible={isCardVisible} />
         </Flex>
       </GridItem>
       <GridItem mt={5}>
-        <PokerCard />
+        <PokerCard index={11} isCardVisible={isCardVisible} />
       </GridItem>
     </Grid>
   );
