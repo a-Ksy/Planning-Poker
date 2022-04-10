@@ -16,7 +16,6 @@ var (
 	userRepository user.Repository = user.NewUserRepository(database, logger)
 	authService    auth.Service    = auth.NewAuthService(userRepository, logger)
 	authController auth.Controller = auth.NewAuthController(authService, logger)
-	authMiddleware auth.Middleware = auth.NewAuthMiddleware()
 	roomRepository room.Repository = room.NewRoomRepository(database, logger)
 	roomService    room.Service    = room.NewRoomService(roomRepository, logger)
 	roomController room.Controller = room.NewRoomController(roomService, logger)
@@ -28,15 +27,13 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	middleware := authMiddleware.GetMiddleware()
-
 	authRoutes := r.Group("api/auth")
 	{
 		authRoutes.POST("/register", authController.Register)
-		authRoutes.GET("/login", authController.Register, middleware.LoginHandler)
+		// authRoutes.GET("/login", middleware.LoginHandler, middleware.LoginHandler)
 	}
 
-	authRoutes.Use(middleware.MiddlewareFunc())
+	// authRoutes.Use(middleware.MiddlewareFunc())
 
 	roomRoutes := r.Group("api/room")
 	{
