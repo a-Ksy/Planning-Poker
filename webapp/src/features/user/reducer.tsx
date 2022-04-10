@@ -1,23 +1,22 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { setName, setId, setToken } from "./actions";
-import { User } from "./types";
 
 type UserState = {
-  user: User;
+  id: string;
+  name: string;
+  token: string;
+  expiresAt: string;
 };
 
 const initialState: UserState = {
-  user: null,
+  id: null,
+  name: null,
+  token: null,
+  expiresAt: null,
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
   builder.addCase(setName, (state, action) => {
-    state.user.name = action.payload;
-  });
-  builder.addCase(setId, (state, action) => {
-    state.user.id = action.payload;
-  });
-  builder.addCase(setToken, (state, action) => {
-    state.user.token = action.payload;
+    state.name = action.payload;
   });
 });

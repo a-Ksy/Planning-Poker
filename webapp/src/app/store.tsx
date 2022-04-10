@@ -6,7 +6,7 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import { roomReducer } from "../features/room";
+import { createRoom, roomReducer } from "../features/room";
 import { userReducer } from "../features/user";
 
 const combinedReducer = combineReducers({
@@ -24,7 +24,14 @@ const reducer = (
       ...action.payload, // apply delta from hydration
     };
     return nextState;
+  } else if (action.type === "room/createRoom/fulfilled") {
+    return {
+      user: action.payload["user"],
+      room: action.payload["room"],
+    };
   } else {
+    console.log("slm", action);
+    console.log(action.type);
     return combinedReducer(state, action);
   }
 };

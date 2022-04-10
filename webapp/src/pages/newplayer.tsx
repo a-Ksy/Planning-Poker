@@ -13,7 +13,7 @@ import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
 import { useAppDispatch } from "../app/hooks";
-import { createRoom, Room } from "../features/room";
+import { createRoom } from "../features/room";
 import { setName } from "../features/user";
 import { localConstants } from "../constants";
 
@@ -41,8 +41,8 @@ function NewPlayer() {
     // Create the room and route to the room
     const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
     dispatch(createRoom({ roomName, username: name })).then((data) => {
-      const room: Room = data.payload;
-      router.push(`/game/${room.id}`);
+      const roomId: string = data.payload["room"]["id"];
+      router.push(`/game/${roomId}`);
     });
   };
 
