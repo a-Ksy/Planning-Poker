@@ -14,7 +14,9 @@ export const Poker = () => {
       gridTemplateColumns="12rem 1fr 12rem"
       gridTemplateRows="8rem 1fr 8rem"
     >
-      <GridItem />
+      <GridItem>
+        <PokerCard />
+      </GridItem>
       <GridItem>
         <Flex>
           <PokerCard />
@@ -24,7 +26,9 @@ export const Poker = () => {
           <PokerCard />
         </Flex>
       </GridItem>
-      <GridItem />
+      <GridItem>
+        <PokerCard />
+      </GridItem>
       <GridItem>
         <Center h="100%">
           <PokerCard />
@@ -38,7 +42,9 @@ export const Poker = () => {
           <PokerCard />
         </Center>
       </GridItem>
-      <GridItem />
+      <GridItem mt={5}>
+        <PokerCard />
+      </GridItem>
       <GridItem mt={5}>
         <Flex>
           <PokerCard />
@@ -48,7 +54,9 @@ export const Poker = () => {
           <PokerCard />
         </Flex>
       </GridItem>
-      <GridItem />
+      <GridItem mt={5}>
+        <PokerCard />
+      </GridItem>
     </Grid>
   );
 };

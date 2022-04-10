@@ -14,15 +14,17 @@ export const PokerCard = (props) => {
           w="3rem"
         />
       </Center>
-      <Text
-        isTruncated
-        maxWidth="6rem"
-        textAlign="center"
-        mt={1.5}
-        fontWeight="semibold"
-      >
-        Atahan
-      </Text>
+      <Center>
+        <Text
+          isTruncated
+          textAlign="center"
+          mt={1.5}
+          fontWeight="semibold"
+          maxWidth="6rem"
+        >
+          Atahan
+        </Text>
+      </Center>
     </Box>
   );
 };
