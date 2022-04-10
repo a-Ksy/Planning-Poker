@@ -3,8 +3,6 @@ import Link from "next/link";
 import { DarkModeSwitch } from "./DarkModeSwitch";
 
 export const Navbar = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const isDark = colorMode === "dark";
   return (
     <Flex position="fixed" p={5}>
       <Box p="3">
