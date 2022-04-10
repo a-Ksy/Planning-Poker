@@ -15,7 +15,7 @@ export const PokerCard = (props) => {
     <Box>
       <Center>
         <Box
-          bg={closed ? "blue.300" : "gray.200"}
+          bg={closed ? "blue.400" : "gray.200"}
           p={4}
           borderRadius="xl"
           h="5rem"
