@@ -7,8 +7,10 @@ import {
 } from "@reduxjs/toolkit";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 import { roomReducer } from "../features/room";
+import { userReducer } from "../features/user";
 
 const combinedReducer = combineReducers({
+  user: userReducer,
   room: roomReducer,
 });
 

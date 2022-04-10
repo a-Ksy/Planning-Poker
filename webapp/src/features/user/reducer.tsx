@@ -10,7 +10,7 @@ const initialState: UserState = {
   user: null,
 };
 
-export const UserReducer = createReducer(initialState, (builder) => {
+export const userReducer = createReducer(initialState, (builder) => {
   builder.addCase(setName, (state, action) => {
     state.user.name = action.payload;
   });
