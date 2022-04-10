@@ -23,9 +23,11 @@ func NewRoomService(roomRepository Repository, logger log.Logger) Service {
 }
 
 func (s *service) CreateRoom(roomName string, adminUsername string) (Room, error) {
+	newUser := user.User{Id: uuid.New().String(), Name: adminUsername}
 	newRoom := Room{
 		Id: uuid.New().String(), Name: roomName,
-		Admin: user.User{Id: uuid.New().String(), Name: adminUsername}}
+		Users: []user.User{newUser},
+		Admin: newUser}
 	if err := s.roomRepository.CreateRoom(newRoom); err != nil {
 		return Room{}, err
 	}
