@@ -9,7 +9,7 @@ export const Navbar = () => {
     <Flex position="fixed" p={5}>
       <Box p="3">
         <Link href="/">
-          <Heading size="lg" _hover={{ cursor: "pointer" }}>
+          <Heading size="md" _hover={{ cursor: "pointer" }}>
             Planning Poker
           </Heading>
         </Link>
