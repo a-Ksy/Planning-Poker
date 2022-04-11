@@ -27,7 +27,7 @@ func main() {
 	roomRoutes := r.Group("api/room")
 	{
 		roomRoutes.POST("/", roomController.CreateRoom)
-		roomRoutes.GET("/:id", auth.CheckAuthToken, roomController.GetRoom)
+		roomRoutes.GET("/:id", auth.IsUserAuthorizedInRoom, roomController.GetRoom)
 		roomRoutes.POST("/:id", roomController.JoinRoom)
 	}
 

@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -41,10 +42,35 @@ func GenerateToken(ctx *gin.Context, userId string, roomId string, isAdmin bool)
 }
 
 func CheckAuthToken(ctx *gin.Context) {
+	_, err := getClaims(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	ctx.Next()
+}
+
+func IsUserAuthorizedInRoom(ctx *gin.Context) {
+	claims, err := getClaims(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	roomId := ctx.Param("id")
+	if claims.RoomId != roomId {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, "User is not authorized to GET room")
+		return
+	}
+
+	ctx.Next()
+}
+
+func getClaims(ctx *gin.Context) (*Claims, error) {
 	tknStr, ok := ctx.Request.Header["Authorization"]
 	if !ok {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, "Authorization token is required")
-		return
+		return nil, errors.New("authorization token is required")
 	}
 
 	claims := &Claims{}
@@ -53,8 +79,8 @@ func CheckAuthToken(ctx *gin.Context) {
 		return jwtKey, nil
 	})
 	if err != nil || !t.Valid {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, "Authorization token is invalid")
+		return nil, errors.New("authorization token is invalid")
 	}
 
-	ctx.Next()
+	return claims, nil
 }
