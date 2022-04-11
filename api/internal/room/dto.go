@@ -13,3 +13,8 @@ type CreatedRoomWithUser struct {
 	User auth.UserWithToken `json:"user"`
 	Room Room               `json:"room"`
 }
+
+type JoinRoom struct {
+	RoomId   string `json:"roomId" validate:"required"`
+	Username string `json:"username" validate:"required"`
+}

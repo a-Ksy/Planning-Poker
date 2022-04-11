@@ -15,6 +15,7 @@ var validate *validator.Validate
 type Controller interface {
 	CreateRoom(ctx *gin.Context)
 	GetRoom(ctx *gin.Context)
+	JoinRoom(ctx *gin.Context)
 }
 
 type controller struct {
@@ -81,6 +82,43 @@ func (c *controller) GetRoom(ctx *gin.Context) {
 
 	c.logger.Info(fmt.Sprintln("Found room:", room))
 	ctx.AbortWithStatusJSON(http.StatusOK, room)
+}
+
+func (c *controller) JoinRoom(ctx *gin.Context) {
+	var joinRoom JoinRoom
+	if err := ctx.BindJSON(&joinRoom); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	err := validate.Struct(joinRoom)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, "'roomId' or 'username' field is not provided")
+		return
+	}
+
+	c.logger.Info(fmt.Sprintln("JoinRoom called with roomId:", joinRoom.RoomId, "and username:", joinRoom.Username))
+	room, user, err := c.service.JoinRoom(joinRoom.RoomId, joinRoom.Username)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusConflict, err)
+		return
+	}
+	c.logger.Info(fmt.Sprintln("User:", user, "has joined the room:", room))
+
+	t, err := auth.GenerateToken(ctx, user.Id, room.Id, false)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.AbortWithStatusJSON(http.StatusOK,
+		CreatedRoomWithUser{
+			auth.UserWithToken{
+				Id:        user.Id,
+				Name:      user.Name,
+				Token:     t.Token,
+				ExpiresAt: t.ExpiresAt},
+			room})
 }
 
 func init() {

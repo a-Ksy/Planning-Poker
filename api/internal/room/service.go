@@ -9,8 +9,9 @@ import (
 )
 
 type Service interface {
-	CreateRoom(roomName string, adminUsername string) (Room, error)
+	CreateRoom(roomName, adminUsername string) (Room, error)
 	GetRoom(roomId string) (Room, error)
+	JoinRoom(roomId, username string) (Room, user.User, error)
 }
 
 type service struct {
@@ -42,4 +43,21 @@ func (s *service) GetRoom(roomId string) (Room, error) {
 	}
 
 	return room, nil
+}
+
+func (s *service) JoinRoom(roomId, username string) (Room, user.User, error) {
+	room, err := s.GetRoom(roomId)
+	if err != nil {
+		return Room{}, user.User{}, err
+	}
+
+	user := user.User{Id: uuid.New().String(), Name: username}
+	room.Users = append(room.Users, user)
+	if err := s.roomRepository.SetRoom(room); err != nil {
+		return Room{}, user, err
+	}
+
+	s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
+
+	return room, user, nil
 }

@@ -12,6 +12,7 @@ import (
 type Repository interface {
 	CreateRoom(room Room) error
 	GetRoom(roomId string) (Room, error)
+	SetRoom(room Room) error
 }
 
 type repository struct {
@@ -35,7 +36,7 @@ func (r *repository) CreateRoom(newRoom Room) error {
 	}
 
 	if err := r.db.Set(newRoom.Id, jsonData); err != nil {
-		fmt.Sprintln(fmt.Sprintln("Error creating a room with id", newRoom.Id))
+		r.logger.Error(fmt.Sprintln("Error creating a room with id", newRoom.Id))
 		return errors.New(fmt.Sprintln("Error creating a room with id", newRoom.Id))
 	}
 
@@ -48,4 +49,13 @@ func (r *repository) GetRoom(roomId string) (Room, error) {
 		return room, nil
 	}
 	return Room{}, errors.New(fmt.Sprintln("Room with id", roomId, "doesn't exist"))
+}
+
+func (r *repository) SetRoom(room Room) error {
+	if err := r.db.Set(room.Id, room); err != nil {
+		r.logger.Error(fmt.Sprintln("Error updating the room with id", room.Id))
+		return err
+	}
+
+	return nil
 }

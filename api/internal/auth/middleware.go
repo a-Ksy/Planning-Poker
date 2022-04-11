@@ -40,7 +40,7 @@ func GenerateToken(ctx *gin.Context, userId string, roomId string, isAdmin bool)
 	return Token{tokenString, expirationTime.String()}, nil
 }
 
-func AuthHandler(ctx *gin.Context) {
+func CheckAuthToken(ctx *gin.Context) {
 	tknStr, ok := ctx.Request.Header["Authorization"]
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, "Authorization token is required")
