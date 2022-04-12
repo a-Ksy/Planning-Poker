@@ -6,6 +6,12 @@ import { useAppSelector } from "../app/hooks";
 export const Poker = () => {
   const { users } = useAppSelector((state) => state.room);
 
+  if (users === null || users === undefined) {
+    console.log(
+      "users is null, I need to get the room by subscribing to the server"
+    );
+    return null;
+  }
   return (
     <Grid
       gap="0.8rem"

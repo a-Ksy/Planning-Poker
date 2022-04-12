@@ -18,11 +18,13 @@ import { setName } from "../features/user";
 import { localConstants } from "../constants";
 
 function getStoredUsername(): string {
-  const username: string = localStorage.getItem(localConstants.USERNAME_KEY);
-  if (username === null || username === undefined) {
-    return "";
+  if (typeof window !== "undefined" && window.localStorage) {
+    const username: string = localStorage.getItem(localConstants.USERNAME_KEY);
+    if (username === null || username === undefined) {
+      return "";
+    }
+    return username;
   }
-  return username;
 }
 
 function NewPlayer() {

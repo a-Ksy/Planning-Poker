@@ -6,8 +6,10 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import { createRoom, roomReducer } from "../features/room";
+import { roomReducer } from "../features/room";
 import { userReducer } from "../features/user";
+import { setCookies } from "cookies-next";
+import { cookieConstants } from "../constants";
 
 const combinedReducer = combineReducers({
   user: userReducer,
@@ -25,13 +27,12 @@ const reducer = (
     };
     return nextState;
   } else if (action.type === "room/createRoom/fulfilled") {
+    setCookies(cookieConstants.USER_KEY, action.payload["user"]);
     return {
       user: action.payload["user"],
       room: action.payload["room"],
     };
   } else {
-    console.log("slm", action);
-    console.log(action.type);
     return combinedReducer(state, action);
   }
 };

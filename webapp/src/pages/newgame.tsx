@@ -7,11 +7,13 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { localConstants } from "../constants";
 
 function getStoredRoomName(): string {
-  const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
-  if (roomName === null || roomName === undefined) {
-    return "";
+  if (typeof window !== "undefined" && window.localStorage) {
+    const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
+    if (roomName === null || roomName === undefined) {
+      return "";
+    }
+    return roomName;
   }
-  return roomName;
 }
 
 function NewGame() {
