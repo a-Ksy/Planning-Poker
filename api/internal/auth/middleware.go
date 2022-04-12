@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,7 @@ func GenerateToken(ctx *gin.Context, userId string, roomId string, isAdmin bool)
 		return Token{}, err
 	}
 
-	return Token{tokenString, expirationTime.String()}, nil
+	return Token{tokenString, strconv.Itoa(int(expirationTime.Unix()))}, nil
 }
 
 func CheckAuthToken(ctx *gin.Context) {
