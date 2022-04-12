@@ -56,8 +56,9 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 
 	ctx.AbortWithStatusJSON(http.StatusCreated,
 		CreatedRoomWithUser{
-			auth.UserWithToken{
+			auth.AuthUser{
 				Id:        room.Admin.Id,
+				RoomId:    room.Id,
 				Name:      room.Admin.Name,
 				Token:     t.Token,
 				ExpiresAt: t.ExpiresAt},
@@ -113,8 +114,9 @@ func (c *controller) JoinRoom(ctx *gin.Context) {
 
 	ctx.AbortWithStatusJSON(http.StatusOK,
 		CreatedRoomWithUser{
-			auth.UserWithToken{
+			auth.AuthUser{
 				Id:        user.Id,
+				RoomId:    room.Id,
 				Name:      user.Name,
 				Token:     t.Token,
 				ExpiresAt: t.ExpiresAt},
