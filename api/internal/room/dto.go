@@ -10,8 +10,8 @@ type RoomCreation struct {
 }
 
 type CreatedRoomWithUser struct {
-	User auth.UserWithToken `json:"user"`
-	Room Room               `json:"room"`
+	User auth.AuthUser `json:"user"`
+	Room Room          `json:"room"`
 }
 
 type JoinRoom struct {
