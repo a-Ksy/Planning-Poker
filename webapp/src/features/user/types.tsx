@@ -1,5 +1,6 @@
 export class User {
   id: string = "";
+  roomId: string = "";
   name: string = "";
   token: string = "";
   expiresAt: string = "";

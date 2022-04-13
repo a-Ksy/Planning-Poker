@@ -12,3 +12,15 @@ export const createRoom = createAsyncThunk(
     return response.data;
   }
 );
+
+export const getRoom = createAsyncThunk(
+  "room/getRoom",
+  async ({ roomId, token }: { roomId: string; token: string }) => {
+    const response = await axios.get(
+      `http://localhost:8080/api/room/${roomId}`,
+      { headers: { Authorization: token } }
+    );
+
+    return response.data;
+  }
+);

@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { User } from "../user";
-import { createRoom } from "./actions";
+import { createRoom, getRoom } from "./actions";
 
 type RoomState = {
   id: string;
@@ -30,6 +30,20 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.pending = true;
     })
     .addCase(createRoom.rejected, (state) => {
+      state.pending = false;
+      state.error = true;
+    })
+    .addCase(getRoom.fulfilled, (state, { payload }) => {
+      state.id = payload.id;
+      state.name = payload.name;
+      state.users = payload.users;
+      state.admin = payload.admin;
+      state.pending = false;
+    })
+    .addCase(getRoom.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(getRoom.rejected, (state) => {
       state.pending = false;
       state.error = true;
     });

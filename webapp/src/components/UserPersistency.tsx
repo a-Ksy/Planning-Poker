@@ -4,7 +4,8 @@ import { User } from "../features/user";
 import { CookieValueTypes } from "cookies-next/lib/types";
 import { useAppDispatch } from "../app/hooks";
 import { setUser } from "../features/user";
-import { Box } from "@chakra-ui/react";
+import { getRoom } from "../features/room";
+import { useEffect } from "react";
 
 function tokenHasExpired(expiresAt: string): boolean {
   const expirationTimestamp: number = Date.parse(expiresAt);
@@ -13,7 +14,7 @@ function tokenHasExpired(expiresAt: string): boolean {
   return currentTimestamp > expirationTimestamp;
 }
 
-function UserPersistency(props) {
+function UserPersistency() {
   if (!checkCookies(cookieConstants.USER_KEY)) {
     return null;
   }
@@ -27,11 +28,14 @@ function UserPersistency(props) {
     removeCookies(cookieConstants.USER_KEY);
     return null;
   }
+
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(setUser(userAsJson));
+    dispatch(getRoom({ roomId: user.roomId, token: user.token }));
+  }, []);
 
-  dispatch(setUser(userAsJson));
-
-  return <Box>{props.children}</Box>;
+  return null;
 }
 
 export default UserPersistency;
