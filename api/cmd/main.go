@@ -21,7 +21,7 @@ func main() {
 	defer database.Close()
 
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(cors.AllowAll())
 
 	// authRoutes.Use(middleware.MiddlewareFunc())
 	roomRoutes := r.Group("api/room")
