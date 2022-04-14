@@ -1,7 +1,6 @@
 package room
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -30,12 +29,7 @@ func (r *repository) CreateRoom(newRoom Room) error {
 		return errors.New(fmt.Sprintln("Room with", newRoom.Id, "already exists"))
 	}
 
-	jsonData, err := json.Marshal(newRoom)
-	if err != nil {
-		return err
-	}
-
-	if err := r.db.Set(newRoom.Id, jsonData); err != nil {
+	if err := r.db.Set(newRoom.Id, newRoom); err != nil {
 		r.logger.Error(fmt.Sprintln("Error creating a room with id", newRoom.Id))
 		return errors.New(fmt.Sprintln("Error creating a room with id", newRoom.Id))
 	}

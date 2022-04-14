@@ -48,6 +48,7 @@ func (s *service) GetRoom(roomId string) (Room, error) {
 func (s *service) JoinRoom(roomId, username string) (Room, user.User, error) {
 	room, err := s.GetRoom(roomId)
 	if err != nil {
+		s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return Room{}, user.User{}, err
 	}
 
@@ -56,8 +57,6 @@ func (s *service) JoinRoom(roomId, username string) (Room, user.User, error) {
 	if err := s.roomRepository.SetRoom(room); err != nil {
 		return Room{}, user, err
 	}
-
-	s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 
 	return room, user, nil
 }

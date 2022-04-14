@@ -37,11 +37,12 @@ func (c *dbcontext) Set(key string, value interface{}) error {
 }
 
 func (c *dbcontext) Get(key string, dest interface{}) error {
-	p, err := c.rdb.Get(context.Background(), key).Bytes()
+	v, err := c.rdb.Get(context.Background(), key).Result()
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(p, dest)
+
+	return json.Unmarshal([]byte(v), dest)
 }
 
 func (c *dbcontext) Close() error {
