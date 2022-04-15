@@ -10,7 +10,7 @@ import { useState } from "react";
 function Game() {
   const dispatch = useAppDispatch();
   const { name, users, pending } = useAppSelector((state) => state.room);
-  console.log(name, users, pending);
+
   return (
     <Box height="100vh">
       <UserPersistency />

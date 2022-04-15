@@ -5,6 +5,8 @@ import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { localConstants } from "../constants";
+import { useAppDispatch } from "../app/hooks";
+import { setHistory } from "../features/history";
 
 function getStoredRoomName(): string {
   if (typeof window !== "undefined" && window.localStorage) {
@@ -19,6 +21,12 @@ function getStoredRoomName(): string {
 function NewGame() {
   const [name, setName] = useState(getStoredRoomName());
   const handleNameChange = (e) => setName(e.target.value);
+  const dispatch = useAppDispatch();
+
+  const handleNewGame = () => {
+    dispatch(setHistory("NewGame"));
+    localStorage.setItem(localConstants.ROOM_NAME_KEY, name);
+  };
 
   return (
     <Box height="100vh">
@@ -50,9 +58,7 @@ function NewGame() {
                   colorScheme="red"
                   isDisabled={name === ""}
                   rightIcon={<ArrowForwardIcon />}
-                  onClick={() =>
-                    localStorage.setItem(localConstants.ROOM_NAME_KEY, name)
-                  }
+                  onClick={() => handleNewGame()}
                 >
                   Next
                 </Button>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   Input,
@@ -12,8 +12,8 @@ import router from "next/router";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 
-import { useAppDispatch } from "../app/hooks";
-import { createRoom } from "../features/room";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { createRoom, joinRoom } from "../features/room";
 import { setName } from "../features/user";
 import { localConstants } from "../constants";
 
@@ -29,20 +29,43 @@ function getStoredUsername(): string {
 
 function NewPlayer() {
   const dispatch = useAppDispatch();
+  const { page, id } = useAppSelector((state) => state.history);
+  console.log(id);
+  useEffect(() => {
+    if (page === "Landing") {
+      router.push("/");
+    }
+  }, []);
 
   const [name, setUsername] = useState(getStoredUsername());
   const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
 
-  const handleCreateRoom = () => {
-    // Set name to local storage and redux
+  const storeUsername = () => {
     localStorage.setItem(localConstants.USERNAME_KEY, name);
     dispatch(setName(name));
+  };
 
-    // Create the room and route to the room
+  const handleRoomAction = () => {
+    storeUsername();
+    if (page === "NewGame") {
+      handleCreateRoom();
+    } else {
+      handleJoinRoom();
+    }
+  };
+
+  const handleCreateRoom = () => {
     const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
     dispatch(createRoom({ roomName, username: name })).then((data) => {
+      const roomId: string = data.payload["room"]["id"];
+      router.push(`/game/${roomId}`);
+    });
+  };
+
+  const handleJoinRoom = () => {
+    dispatch(joinRoom({ roomId: id, username: name })).then((data) => {
       const roomId: string = data.payload["room"]["id"];
       router.push(`/game/${roomId}`);
     });
@@ -79,7 +102,7 @@ function NewPlayer() {
                 width="full"
                 colorScheme="green"
                 isDisabled={name === ""}
-                onClick={() => handleCreateRoom()}
+                onClick={() => handleRoomAction()}
               >
                 Let's begin!
               </Button>

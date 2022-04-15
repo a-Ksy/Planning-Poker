@@ -8,10 +8,12 @@ import {
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 import { roomReducer } from "../features/room";
 import { userReducer } from "../features/user";
+import { historyReducer } from "../features/history";
 import { setCookies } from "cookies-next";
 import { cookieConstants } from "../constants";
 
 const combinedReducer = combineReducers({
+  history: historyReducer,
   user: userReducer,
   room: roomReducer,
 });
@@ -26,9 +28,13 @@ const reducer = (
       ...action.payload, // apply delta from hydration
     };
     return nextState;
-  } else if (action.type === "room/createRoom/fulfilled") {
+  } else if (
+    action.type === "room/createRoom/fulfilled" ||
+    action.type === "room/joinRoom/fulfilled"
+  ) {
     setCookies(cookieConstants.USER_KEY, action.payload["user"]);
     return {
+      history: state.history,
       user: action.payload["user"],
       room: action.payload["room"],
     };

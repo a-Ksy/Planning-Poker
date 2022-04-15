@@ -24,3 +24,15 @@ export const getRoom = createAsyncThunk(
     return response.data;
   }
 );
+
+export const joinRoom = createAsyncThunk(
+  "room/joinRoom",
+  async ({ roomId, username }: { roomId: string; username: string }) => {
+    const response = await axios.post(
+      `http://localhost:8080/api/room/${roomId}`,
+      { roomId, username }
+    );
+
+    return response.data;
+  }
+);

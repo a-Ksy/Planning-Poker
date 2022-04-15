@@ -5,7 +5,10 @@ import { CookieValueTypes } from "cookies-next/lib/types";
 import { useAppDispatch } from "../app/hooks";
 import { setUser } from "../features/user";
 import { getRoom } from "../features/room";
+import { setId } from "../features/history";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { setHistory } from "../features/history";
 
 function tokenHasExpired(expiresAt: string): boolean {
   const expirationTimestamp: number = Date.parse(expiresAt);
@@ -15,25 +18,41 @@ function tokenHasExpired(expiresAt: string): boolean {
 }
 
 function UserPersistency() {
-  if (!checkCookies(cookieConstants.USER_KEY)) {
-    return null;
-  }
-
-  const userString: CookieValueTypes = getCookie(cookieConstants.USER_KEY);
-  const userAsJson = JSON.parse(userString.toString());
-
-  let user: User = User.fromJSON(userAsJson);
-
-  if (user === undefined || user === null || tokenHasExpired(user.expiresAt)) {
-    removeCookies(cookieConstants.USER_KEY);
-    return null;
-  }
-
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { query, isReady } = router;
+
   useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    if (!checkCookies(cookieConstants.USER_KEY)) {
+      dispatch(setHistory("Game"));
+      const { id } = query;
+      dispatch(setId(id.toString()));
+      router.push(`/newplayer`);
+      return;
+    }
+
+    const userString: CookieValueTypes = getCookie(cookieConstants.USER_KEY);
+    const userAsJson = JSON.parse(userString.toString());
+
+    let user: User = User.fromJSON(userAsJson);
+
+    if (
+      user === undefined ||
+      user === null ||
+      tokenHasExpired(user.expiresAt)
+    ) {
+      removeCookies(cookieConstants.USER_KEY);
+      router.push(`/newplayer`);
+      return;
+    }
+
     dispatch(setUser(userAsJson));
     dispatch(getRoom({ roomId: user.roomId, token: user.token }));
-  }, []);
+  }, [isReady]);
 
   return null;
 }

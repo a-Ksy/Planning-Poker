@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { User } from "../user";
-import { createRoom, getRoom } from "./actions";
+import { createRoom, getRoom, joinRoom } from "./actions";
 
 type RoomState = {
   id: string;
@@ -44,6 +44,17 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.pending = true;
     })
     .addCase(getRoom.rejected, (state) => {
+      state.pending = false;
+      state.error = true;
+    })
+    .addCase(joinRoom.fulfilled, (state, { payload }) => {
+      // The payload is set in the combinedReducer as it contains both user and room information
+      state.pending = false;
+    })
+    .addCase(joinRoom.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(joinRoom.rejected, (state) => {
       state.pending = false;
       state.error = true;
     });
