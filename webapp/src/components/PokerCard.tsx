@@ -6,6 +6,7 @@ export const PokerCard = (props) => {
   const { closed, user }: { closed: boolean; user: User } = props;
 
   const { admin }: { admin: User } = useAppSelector((state) => state.room);
+  const { id } = useAppSelector((state) => state.user);
 
   if (user == undefined || user == null) {
     return null;
@@ -15,15 +16,17 @@ export const PokerCard = (props) => {
     <Box>
       <Center>
         <Box
-          bg={closed ? "blue.400" : "gray.200"}
+          bg={closed ? "blue.400" : "gray.400"}
           p={4}
           borderRadius="xl"
           h="5rem"
           w="3rem"
-          border={admin.id === user.id && "3px solid #ECC94B"}
+          borderWidth={id === user.id && "5px"}
+          borderColor={id === user.id && "whiteAlpha.600"}
         />
       </Center>
       <Center>
+        {admin.id === user.id && <Text mr={1.5} fontSize="xs">{`👑`}</Text>}
         <Text
           isTruncated
           textAlign="center"
