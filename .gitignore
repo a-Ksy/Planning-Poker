@@ -19,3 +19,6 @@ vendor/
 
 # TODO File
 TODO
+
+# IDE stuff
+.idea
