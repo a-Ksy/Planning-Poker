@@ -2,6 +2,7 @@ package room
 
 import (
 	"fmt"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/room/ws"
 	"net/http"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/auth"
@@ -14,17 +15,19 @@ var validate *validator.Validate
 
 type Controller interface {
 	CreateRoom(ctx *gin.Context)
-	GetRoom(ctx *gin.Context)
 	JoinRoom(ctx *gin.Context)
+	GetRoom(ctx *gin.Context)
+	ServeWS(ctx *gin.Context)
 }
 
 type controller struct {
-	service Service
-	logger  log.Logger
+	wsServer *ws.WSServer
+	service  Service
+	logger   log.Logger
 }
 
-func NewRoomController(service Service, logger log.Logger) Controller {
-	return &controller{service, logger}
+func NewRoomController(wsServer *ws.WSServer, service Service, logger log.Logger) Controller {
+	return &controller{wsServer, service, logger}
 }
 
 func (c *controller) CreateRoom(ctx *gin.Context) {
@@ -48,7 +51,7 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 	}
 	c.logger.Info(fmt.Sprintln("Created room:", room))
 
-	t, err := auth.GenerateToken(ctx, room.Admin.Id, room.Id, true)
+	t, err := auth.GenerateToken(ctx, &room.Admin, room.Id, true)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
@@ -65,7 +68,6 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 			room})
 }
 
-// TODO: Only authorized people for this room should be able to retrieve data
 func (c *controller) GetRoom(ctx *gin.Context) {
 	roomId := ctx.Param("id")
 	c.logger.Info(fmt.Sprintln("GetRoom called with roomId:", roomId))
@@ -106,7 +108,7 @@ func (c *controller) JoinRoom(ctx *gin.Context) {
 	}
 	c.logger.Info(fmt.Sprintln("User:", user, "has joined the room:", room))
 
-	t, err := auth.GenerateToken(ctx, user.Id, room.Id, false)
+	t, err := auth.GenerateToken(ctx, &user, room.Id, false)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
@@ -121,6 +123,20 @@ func (c *controller) JoinRoom(ctx *gin.Context) {
 				Token:     t.Token,
 				ExpiresAt: t.ExpiresAt},
 			room})
+}
+
+func (c *controller) ServeWS(ctx *gin.Context) {
+	token := ctx.Param("token")
+	c.logger.Info(fmt.Sprintln("ServeWS called with token:", token))
+
+	userClaims, err := auth.GetUserClaimsFromToken(token)
+	if err != nil {
+		c.logger.Info(fmt.Sprintln("ServeWS invalid token:", token))
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, "Invalid token")
+		return
+	}
+
+	ws.ServeWS(c.wsServer, ctx.Writer, ctx.Request, userClaims)
 }
 
 func init() {

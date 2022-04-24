@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
@@ -13,20 +14,16 @@ import (
 // TODO: Put the secret into .env file
 var jwtKey = []byte("my_secret_key")
 
-type Claims struct {
-	UserId  string `json:"userId"`
-	RoomId  string `json:"roomId"`
-	IsAdmin bool   `json:"isAdmin"`
-	jwt.StandardClaims
-}
-
-func GenerateToken(ctx *gin.Context, userId string, roomId string, isAdmin bool) (Token, error) {
+func GenerateToken(ctx *gin.Context, user *user.User, roomId string, isAdmin bool) (Token, error) {
 	expirationTime := time.Now().Add(4 * time.Hour)
 
 	claims := &Claims{
-		UserId:  userId,
-		RoomId:  roomId,
-		IsAdmin: isAdmin,
+		UserClaims: UserClaims{
+			UserId:   user.Id,
+			Username: user.Name,
+			RoomId:   roomId,
+			IsAdmin:  isAdmin,
+		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -43,7 +40,7 @@ func GenerateToken(ctx *gin.Context, userId string, roomId string, isAdmin bool)
 }
 
 func CheckAuthToken(ctx *gin.Context) {
-	_, err := getClaims(ctx)
+	_, err := getAllClaims(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err.Error())
 		return
@@ -53,14 +50,14 @@ func CheckAuthToken(ctx *gin.Context) {
 }
 
 func IsUserAuthorizedInRoom(ctx *gin.Context) {
-	claims, err := getClaims(ctx)
+	claims, err := getAllClaims(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err.Error())
 		return
 	}
 
 	roomId := ctx.Param("id")
-	if claims.RoomId != roomId {
+	if claims.UserClaims.RoomId != roomId {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, "User is not authorized to GET room")
 		return
 	}
@@ -68,20 +65,35 @@ func IsUserAuthorizedInRoom(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func getClaims(ctx *gin.Context) (*Claims, error) {
+func getAllClaims(ctx *gin.Context) (*Claims, error) {
 	tknStr, ok := ctx.Request.Header["Authorization"]
 	if !ok {
 		return nil, errors.New("authorization token is required")
 	}
 
-	claims := &Claims{}
+	claims, err := getAllClaimsFromToken(tknStr[0])
+	if err != nil {
+		return nil, err
+	}
 
-	t, err := jwt.ParseWithClaims(tknStr[0], claims, func(token *jwt.Token) (interface{}, error) {
+	return claims, nil
+}
+
+func GetUserClaimsFromToken(token string) (*UserClaims, error) {
+	claims, err := getAllClaimsFromToken(token)
+	if err != nil {
+		return nil, err
+	}
+	return &claims.UserClaims, nil
+}
+
+func getAllClaimsFromToken(token string) (*Claims, error) {
+	claims := &Claims{}
+	t, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
 	if err != nil || !t.Valid {
 		return nil, errors.New("authorization token is invalid")
 	}
-
 	return claims, nil
 }

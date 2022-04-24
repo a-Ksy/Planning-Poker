@@ -12,6 +12,7 @@ type Service interface {
 	CreateRoom(roomName, adminUsername string) (Room, error)
 	GetRoom(roomId string) (Room, error)
 	JoinRoom(roomId, username string) (Room, user.User, error)
+	IsUserInRoom(userId, roomId string) (bool, error)
 }
 
 type service struct {
@@ -59,4 +60,8 @@ func (s *service) JoinRoom(roomId, username string) (Room, user.User, error) {
 	}
 
 	return room, user, nil
+}
+
+func (s *service) IsUserInRoom(userId, roomId string) (bool, error) {
+	return false, nil
 }

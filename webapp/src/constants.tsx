@@ -6,3 +6,7 @@ export const localConstants = {
 export const cookieConstants = {
   USER_KEY: "user",
 };
+
+export const roomActions = {
+  ROOM_JOINED: "room-joined",
+};
