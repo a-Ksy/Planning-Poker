@@ -145,8 +145,6 @@ func (c *Client) joinRoom(roomId string, user *user.User) {
 	if c.room == nil {
 		c.room = room
 		room.register <- c
-		// TODO: Don't broadcast the message if the userId is already in the room
-
-		room.broadcast <- &Message{Action: RoomJoinedAction, User: user}
+		room.broadcastToOnlyOthers <- &Message{Action: RoomJoinedAction, User: user}
 	}
 }

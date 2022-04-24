@@ -1,6 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useState, useEffect } from "react";
-import { getRoom } from "../features/room";
+import { roomJoined } from "../features/room";
+import { User } from "../features/user";
+import { roomActions } from "../constants";
+class Message {
+  action: string = "";
+  user: User = null;
+  message: string = "";
+
+  static fromJSON(json: object): Message {
+    return Object.assign(new Message(), json);
+  }
+}
 
 export const WSWrapper = (props) => {
   const isBrowser = typeof window !== "undefined";
@@ -19,9 +30,13 @@ export const WSWrapper = (props) => {
   }, [token]);
 
   if (ws !== null) {
-    ws.onmessage = () => {
-      // TODO: Parse the messages into JSON and update the Redux store based on the message.
-      dispatch(getRoom({ roomId: id, token }));
+    ws.onmessage = (event: MessageEvent) => {
+      const message: Message = Message.fromJSON(JSON.parse(event.data));
+
+      switch (message?.action) {
+        case roomActions.ROOM_JOINED:
+          dispatch(roomJoined(message.user));
+      }
     };
   }
 

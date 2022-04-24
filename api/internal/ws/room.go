@@ -4,6 +4,7 @@ type Room struct {
 	id         string
 	clients    map[*Client]bool
 	broadcast  chan *Message
+	broadcastToOnlyOthers chan *Message
 	register   chan *Client
 	unregister chan *Client
 }
@@ -15,6 +16,7 @@ func newRoom(id string) *Room {
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		broadcast:  make(chan *Message),
+		broadcastToOnlyOthers: make(chan *Message),
 	}
 }
 
@@ -27,6 +29,8 @@ func (room *Room) runRoom() {
 			room.unregisterClient(client)
 		case message := <-room.broadcast:
 			room.broadcastMessage(message)
+		case message := <-room.broadcastToOnlyOthers:
+			room.broadcastMessageToOthers(message)
 		}
 	}
 }
@@ -44,5 +48,13 @@ func (room *Room) unregisterClient(client *Client) {
 func (room *Room) broadcastMessage(message *Message) {
 	for client := range room.clients {
 		client.send <- message.encode()
+	}
+}
+
+func (room *Room) broadcastMessageToOthers(message *Message) {
+	for client := range room.clients {
+		if client.id != message.User.Id {
+			client.send <- message.encode()
+		}
 	}
 }

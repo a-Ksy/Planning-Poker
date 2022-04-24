@@ -1,5 +1,6 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { User } from "../user";
 
 export const createRoom = createAsyncThunk(
   "room/createRoom",
@@ -36,3 +37,5 @@ export const joinRoom = createAsyncThunk(
     return response.data;
   }
 );
+
+export const roomJoined = createAction<User>("room/roomJoined");

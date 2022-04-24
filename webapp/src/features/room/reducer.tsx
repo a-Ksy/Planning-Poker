@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { User } from "../user";
-import { createRoom, getRoom, joinRoom } from "./actions";
+import { createRoom, getRoom, joinRoom, roomJoined } from "./actions";
 
 type RoomState = {
   id: string;
@@ -57,5 +57,15 @@ export const roomReducer = createReducer(initialState, (builder) => {
     .addCase(joinRoom.rejected, (state) => {
       state.pending = false;
       state.error = true;
+    })
+    .addCase(roomJoined, (state, { payload }) => {
+      const prevUsers: User[] = state.users;
+      for (const user of prevUsers) {
+        if (user.id == payload.id) {
+          return;
+        }
+      }
+      prevUsers.push(payload);
+      state.users = prevUsers;
     });
 });

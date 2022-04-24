@@ -1,11 +1,17 @@
 package ws
 
+import (
+	"github.com/a-Ksy/Planning-Poker/backend/internal/room"
+)
+
 type WSServer struct {
+	roomService room.Service
 	rooms map[*Room]bool
 }
 
-func NewWSServer() *WSServer {
+func NewWSServer(roomService room.Service) *WSServer {
 	return &WSServer{
+		roomService: roomService,
 		rooms: make(map[*Room]bool),
 	}
 }

@@ -2,7 +2,6 @@ package room
 
 import (
 	"fmt"
-	"github.com/a-Ksy/Planning-Poker/backend/internal/room/ws"
 	"net/http"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/auth"
@@ -17,17 +16,15 @@ type Controller interface {
 	CreateRoom(ctx *gin.Context)
 	JoinRoom(ctx *gin.Context)
 	GetRoom(ctx *gin.Context)
-	ServeWS(ctx *gin.Context)
 }
 
 type controller struct {
-	wsServer *ws.WSServer
 	service  Service
 	logger   log.Logger
 }
 
-func NewRoomController(wsServer *ws.WSServer, service Service, logger log.Logger) Controller {
-	return &controller{wsServer, service, logger}
+func NewRoomController(service Service, logger log.Logger) Controller {
+	return &controller{service, logger}
 }
 
 func (c *controller) CreateRoom(ctx *gin.Context) {
@@ -123,20 +120,6 @@ func (c *controller) JoinRoom(ctx *gin.Context) {
 				Token:     t.Token,
 				ExpiresAt: t.ExpiresAt},
 			room})
-}
-
-func (c *controller) ServeWS(ctx *gin.Context) {
-	token := ctx.Param("token")
-	c.logger.Info(fmt.Sprintln("ServeWS called with token:", token))
-
-	userClaims, err := auth.GetUserClaimsFromToken(token)
-	if err != nil {
-		c.logger.Info(fmt.Sprintln("ServeWS invalid token:", token))
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, "Invalid token")
-		return
-	}
-
-	ws.ServeWS(c.wsServer, ctx.Writer, ctx.Request, userClaims)
 }
 
 func init() {

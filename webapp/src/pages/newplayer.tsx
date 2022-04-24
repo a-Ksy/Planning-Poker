@@ -30,7 +30,6 @@ function getStoredUsername(): string {
 function NewPlayer() {
   const dispatch = useAppDispatch();
   const { page, id } = useAppSelector((state) => state.history);
-  console.log(id);
   useEffect(() => {
     if (page === "Landing") {
       router.push("/");
