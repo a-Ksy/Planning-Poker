@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -107,13 +108,22 @@ func (c *Client) readPump() {
 			break
 		}
 
-		var message Message
-		if err := json.Unmarshal(jsonMessage, &message); err != nil {
-			log.Printf("Error on unmarshal JSON message %s", err)
-			return
-		}
+		c.handleNewMessage(jsonMessage)
+	}
+}
 
-		c.send <- message.encode()
+func (c *Client) handleNewMessage(jsonMessage []byte) {
+	var message Message
+	if err := json.Unmarshal(jsonMessage, &message); err != nil {
+		log.Printf("Error on unmarshal JSON message %s", err)
+		return
+	}
+
+	fmt.Println(message)
+	switch message.Action {
+		case VoteSubmittedAction:
+			// TODO: Validate vote, save it to redis and broadcast private vote to all
+			c.room.broadcast <- &message
 	}
 }
 
@@ -130,21 +140,25 @@ func ServeWS(wsServer *WSServer, w http.ResponseWriter, r *http.Request, claims 
 	}
 
 	client := newClient(conn, wsServer, claims.UserId, nil)
-	client.joinRoom(claims.RoomId, &user.User{Id: claims.UserId, Name: claims.Username})
+	client.joinRoom(claims.RoomId, claims.UserId, claims.Username)
 
 	go client.readPump()
 	go client.writePump()
 }
 
-func (c *Client) joinRoom(roomId string, user *user.User) {
+func (c *Client) joinRoom(roomId, userId, username string) {
 	room := c.wsServer.findRoomById(roomId)
 	if room == nil {
 		room = c.wsServer.createRoom(roomId)
 	}
 
+	user := &user.User{Id: userId, Name: username}
+
 	if c.room == nil {
 		c.room = room
 		room.register <- c
-		room.broadcastToOnlyOthers <- &Message{Action: RoomJoinedAction, User: user}
+
+		message := Message{Action: RoomJoinedAction, User: user}
+		c.room.broadcastToOnlyOthers <- &message
 	}
 }

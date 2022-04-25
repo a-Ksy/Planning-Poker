@@ -10,3 +10,13 @@ export const cookieConstants = {
 export const roomActions = {
   ROOM_JOINED: "room-joined",
 };
+
+export const gameActions = {
+  VOTE_SUBMITTED: "vote-submitted",
+};
+
+export const voteCardValues = {
+  CONFUSED: -1, // the '?' card
+  NOT_SELECTED: -2,
+  PRIVATE: -3, // when card is selected but not revealed, the value is private
+};

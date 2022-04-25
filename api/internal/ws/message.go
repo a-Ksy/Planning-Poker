@@ -8,6 +8,7 @@ import (
 )
 
 const RoomJoinedAction = "room-joined"
+const VoteSubmittedAction = "vote-submitted"
 
 type Message struct {
 	Action  string     `json:"action"`

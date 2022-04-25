@@ -1,8 +1,8 @@
 import { User } from "../user";
-
-export type Room = {
-  id: string;
-  name: string;
-  users: User[];
-  admin: User;
-};
+import { voteCardValues } from "../../constants";
+export class Room {
+  id: string = "";
+  name: string = "";
+  users: User[] = null;
+  admin: User = null;
+}

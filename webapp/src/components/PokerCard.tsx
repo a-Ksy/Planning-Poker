@@ -1,22 +1,38 @@
 import { Box, Center, Text } from "@chakra-ui/react";
 import { User } from "../features/user";
 import { useAppSelector } from "../app/hooks";
+import { voteCardValues } from "../constants";
 
 export const PokerCard = (props) => {
-  const { closed, user }: { closed: boolean; user: User } = props;
+  const { user }: { user: User } = props;
 
   const { admin }: { admin: User } = useAppSelector((state) => state.room);
+  const { votes }: { votes: {} } = useAppSelector((state) => state.vote);
   const { id } = useAppSelector((state) => state.user);
 
   if (user == undefined || user == null) {
     return null;
   }
 
+  const hasUserVoted = () => {
+    return (
+      votes[user.id] !== undefined &&
+      votes[user.id] !== null &&
+      votes[user.id] !== voteCardValues.NOT_SELECTED
+    );
+  };
+
+  const closedCardBackground = `background-color: #4299E1; opacity: 0.8; 
+    background: linear-gradient(135deg, #ffffff55 25%, transparent 25%) -10px 0/ 20px 20px, 
+    linear-gradient(225deg, #ffffff 25%, transparent 25%) -10px 0/ 20px 20px, 
+    linear-gradient(315deg, #ffffff55 25%, transparent 25%) 0px 0/ 20px 20px, 
+    linear-gradient(45deg, #ffffff 25%, #4299E1 25%) 0px 0/ 20px 20px;`;
+
   return (
     <Box>
       <Center>
         <Box
-          bg={closed ? "blue.400" : "gray.400"}
+          background={hasUserVoted() ? closedCardBackground : "gray.300"}
           p={4}
           borderRadius="xl"
           h="5rem"

@@ -8,6 +8,7 @@ import {
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 import { roomReducer } from "../features/room";
 import { userReducer } from "../features/user";
+import { voteReducer } from "../features/vote";
 import { historyReducer } from "../features/history";
 import { setCookies } from "cookies-next";
 import { cookieConstants } from "../constants";
@@ -16,6 +17,7 @@ const combinedReducer = combineReducers({
   history: historyReducer,
   user: userReducer,
   room: roomReducer,
+  vote: voteReducer,
 });
 
 const reducer = (
@@ -37,6 +39,7 @@ const reducer = (
       history: state.history,
       user: action.payload["user"],
       room: action.payload["room"],
+      vote: state.vote,
     };
   } else {
     return combinedReducer(state, action);
