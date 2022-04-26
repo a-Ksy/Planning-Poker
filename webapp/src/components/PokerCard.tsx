@@ -1,7 +1,13 @@
-import { Box, Center, Text } from "@chakra-ui/react";
+import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { User } from "../features/user";
 import { useAppSelector } from "../app/hooks";
 import { voteCardValues } from "../constants";
+
+const closedCardBackground = `background-color: #4299E1;  
+background: linear-gradient(135deg, #ffffff55 25%, transparent 25%) -10px 0/ 20px 20px, 
+linear-gradient(225deg, #ffffff 25%, transparent 25%) -10px 0/ 20px 20px, 
+linear-gradient(315deg, #ffffff55 25%, transparent 25%) 0px 0/ 20px 20px, 
+linear-gradient(45deg, #ffffff 25%, #4299E1 25%) 0px 0/ 20px 20px;`;
 
 export const PokerCard = (props) => {
   const { user }: { user: User } = props;
@@ -22,23 +28,27 @@ export const PokerCard = (props) => {
     );
   };
 
-  const closedCardBackground = `background-color: #4299E1;  
-    background: linear-gradient(135deg, #ffffff55 25%, transparent 25%) -10px 0/ 20px 20px, 
-    linear-gradient(225deg, #ffffff 25%, transparent 25%) -10px 0/ 20px 20px, 
-    linear-gradient(315deg, #ffffff55 25%, transparent 25%) 0px 0/ 20px 20px, 
-    linear-gradient(45deg, #ffffff 25%, #4299E1 25%) 0px 0/ 20px 20px;`;
+  const userOwnsTheCard = id === user.id;
+  const { colorMode } = useColorMode();
+  const borderColor = { light: "blackAlpha.200", dark: "blackAlpha.400" };
 
   return (
     <Box>
       <Center>
         <Box
-          background={hasUserVoted() ? closedCardBackground : "gray.300"}
+          background={
+            hasUserVoted()
+              ? closedCardBackground
+              : userOwnsTheCard
+              ? "gray.200"
+              : "gray.200"
+          }
           p={4}
           borderRadius="xl"
           h="5rem"
           w="3rem"
-          borderWidth={id === user.id && "5px"}
-          borderColor={id === user.id && "whiteAlpha.600"}
+          borderWidth={userOwnsTheCard && "5px"}
+          borderColor={userOwnsTheCard && borderColor[colorMode]}
         />
       </Center>
       <Center>

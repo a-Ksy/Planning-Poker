@@ -19,7 +19,7 @@ export const VoteCards = () => {
   ];
 
   return (
-    <Grid templateColumns={`repeat(${sequence.length}, 1fr)`} gap={9}>
+    <Grid templateColumns={`repeat(${sequence.length}, 1fr)`} gap={5}>
       {sequence.map((value) => {
         return <VoteCard key={value} value={value} />;
       })}
