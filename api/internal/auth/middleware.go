@@ -14,13 +14,13 @@ import (
 // TODO: Put the secret into .env file
 var jwtKey = []byte("my_secret_key")
 
-func GenerateToken(ctx *gin.Context, user *user.User, roomId string, isAdmin bool) (Token, error) {
+func GenerateToken(user *user.User, roomId string, isAdmin bool) (Token, error) {
 	expirationTime := time.Now().Add(4 * time.Hour)
 
 	claims := &Claims{
 		UserClaims: UserClaims{
-			UserId:   user.Id,
-			Username: user.Name,
+			UserId:   user.GetId(),
+			Username: user.GetName(),
 			RoomId:   roomId,
 			IsAdmin:  isAdmin,
 		},

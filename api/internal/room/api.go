@@ -48,7 +48,7 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 	}
 	c.logger.Info(fmt.Sprintln("Created room:", room))
 
-	t, err := auth.GenerateToken(ctx, &room.Admin, room.Id, true)
+	t, err := auth.GenerateToken(room.GetAdmin(), room.GetId(), true)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
@@ -56,10 +56,10 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 
 	ctx.AbortWithStatusJSON(http.StatusCreated,
 		CreatedRoomWithUser{
-			auth.AuthUser{
-				Id:        room.Admin.Id,
-				RoomId:    room.Id,
-				Name:      room.Admin.Name,
+			&auth.AuthUser{
+				Id:        room.GetAdmin().GetId(),
+				RoomId:    room.GetId(),
+				Name:      room.GetAdmin().GetName(),
 				Token:     t.Token,
 				ExpiresAt: t.ExpiresAt},
 			room})
@@ -81,7 +81,7 @@ func (c *controller) GetRoom(ctx *gin.Context) {
 	}
 
 	c.logger.Info(fmt.Sprintln("Found room:", room))
-	ctx.AbortWithStatusJSON(http.StatusOK, room)
+	ctx.AbortWithStatusJSON(http.StatusOK, &room)
 }
 
 func (c *controller) JoinRoom(ctx *gin.Context) {
@@ -105,7 +105,7 @@ func (c *controller) JoinRoom(ctx *gin.Context) {
 	}
 	c.logger.Info(fmt.Sprintln("User:", user, "has joined the room:", room))
 
-	t, err := auth.GenerateToken(ctx, &user, room.Id, false)
+	t, err := auth.GenerateToken(user, room.GetId(), false)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
@@ -113,10 +113,10 @@ func (c *controller) JoinRoom(ctx *gin.Context) {
 
 	ctx.AbortWithStatusJSON(http.StatusOK,
 		CreatedRoomWithUser{
-			auth.AuthUser{
-				Id:        user.Id,
-				RoomId:    room.Id,
-				Name:      user.Name,
+			&auth.AuthUser{
+				Id:        user.GetId(),
+				RoomId:    room.GetId(),
+				Name:      user.GetName(),
 				Token:     t.Token,
 				ExpiresAt: t.ExpiresAt},
 			room})

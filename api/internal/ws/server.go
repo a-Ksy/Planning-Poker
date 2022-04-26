@@ -2,34 +2,49 @@ package ws
 
 import (
 	"github.com/a-Ksy/Planning-Poker/backend/internal/room"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 )
 
 type WSServer struct {
 	roomService room.Service
-	rooms map[*Room]bool
+	games       map[*Game]bool
 }
 
 func NewWSServer(roomService room.Service) *WSServer {
 	return &WSServer{
 		roomService: roomService,
-		rooms: make(map[*Room]bool),
+		games:       make(map[*Game]bool),
 	}
 }
 
-func (s *WSServer) findRoomById(id string) *Room {
-	var foundRoom *Room
-	for r := range s.rooms {
+func (s *WSServer) findGameById(id string) *Game {
+	var foundGame *Game
+	for r := range s.games {
 		if r.id == id {
-			foundRoom = r
+			foundGame = r
 			break
 		}
 	}
-	return foundRoom
+	return foundGame
 }
 
-func (s *WSServer) createRoom(roomId string) *Room {
-	room := newRoom(roomId)
-	go room.runRoom()
-	s.rooms[room] = true
-	return room
+func (s *WSServer) createGame(gameId string) *Game {
+	game := newGame(gameId)
+	go game.runGame()
+	s.games[game] = true
+	return game
+}
+
+func (s *WSServer) findUserById(roomId, userId string) (*user.User, error) {
+	room, err := s.roomService.GetRoom(roomId)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := room.GetUserWithId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

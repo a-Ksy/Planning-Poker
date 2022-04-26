@@ -1,18 +1,107 @@
 package room
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
+	"github.com/google/uuid"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 )
 
 type Room struct {
-	Id    string      `json:"id"`
-	Name  string      `json:"name"`
-	Users []user.User `json:"users"`
-	Admin user.User   `json:"admin"`
+	id    string      `json:"id"`
+	name  string      `json:"name"`
+	users []user.User `json:"users"`
+	admin *user.User   `json:"admin"`
+	votes vote.Votes `json:"votes"`
 }
 
-func (r Room) String() string {
-	return fmt.Sprintln("Id:", r.Id, "Name:", r.Name, "Users:", r.Users, "Admin:", r.Admin)
+func NewRoom(name string) *Room {
+	return &Room{
+		id: uuid.New().String(),
+		name: name,
+		users: []user.User{},
+		admin: nil,
+		votes: vote.NewVotes()}
+}
+
+func NewRoomWithAdmin(name string, admin *user.User) *Room {
+	room := NewRoom(name)
+	room.SetAdmin(admin)
+	room.AddUser(admin)
+	return room
+}
+
+func (r *Room) GetId() string {
+	return r.id
+}
+
+func (r *Room) GetName() string {
+	return r.name
+}
+
+func (r *Room) AddUser(user *user.User) {
+	r.users = append(r.users, *user)
+}
+
+func (r *Room) GetUserWithId(userId string) (*user.User, error) {
+	for _, u := range r.users {
+		if u.GetId() == userId {
+			return &u, nil
+		}
+	}
+	return nil, errors.New("couldn't find user with given id")
+}
+
+func (r *Room) RemoveUserWithId(userId string) bool {
+	for i, u := range r.users {
+		if u.GetId() == userId {
+			r.users = append(r.users[:i], r.users[i+1:]...)
+			return true
+		}
+	}
+	return false
+}
+
+func (r *Room) GetAdmin() *user.User {
+	return r.admin
+}
+
+func (r *Room) SetAdmin(user *user.User) {
+	r.admin = user
+}
+
+func (r *Room) GetVotes() vote.Votes {
+	return r.votes
+}
+
+func (r *Room) String() string {
+	return fmt.Sprintln("Id:", r.id, "Name:", r.name, "Users:", r.users, "Admin:", r.admin)
+}
+
+func (r *Room) MarshalJSON() ([]byte, error) {
+	return json.Marshal(RoomDto{
+		r.id,
+		r.name,
+		r.users,
+		r.admin,
+		r.votes,
+	})
+}
+
+func (r *Room) UnmarshalJSON(b []byte) error {
+	temp := &RoomDto{}
+
+	if err := json.Unmarshal(b, &temp); err != nil {
+		return err
+	}
+
+	r.id = temp.Id
+	r.name = temp.Name
+	r.users = temp.Users
+	r.admin = temp.Admin
+	r.votes = temp.Votes
+	return nil
 }

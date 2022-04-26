@@ -3,12 +3,13 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/auth"
-	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	"github.com/gorilla/websocket"
 )
 
@@ -32,16 +33,16 @@ var upgrader = websocket.Upgrader{
 
 type Client struct {
 	id       string
-	room     *Room
+	game     *Game
 	conn     *websocket.Conn
 	send     chan []byte
 	wsServer *WSServer
 }
 
-func newClient(conn *websocket.Conn, wsServer *WSServer, id string, room *Room) *Client {
+func newClient(conn *websocket.Conn, wsServer *WSServer, id string, room *Game) *Client {
 	return &Client{
 		id:       id,
-		room:     room,
+		game:     room,
 		conn:     conn,
 		wsServer: wsServer,
 		send:     make(chan []byte, 256),
@@ -122,13 +123,12 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 	fmt.Println(message)
 	switch message.Action {
 		case VoteSubmittedAction:
-			// TODO: Validate vote, save it to redis and broadcast private vote to all
-			c.room.broadcast <- &message
+			c.handleVoteSubmittedMessage(message)
 	}
 }
 
 func (c *Client) disconnect() {
-	c.room.unregister <- c
+	c.game.unregister <- c
 	close(c.send)
 	c.conn.Close()
 }
@@ -140,25 +140,45 @@ func ServeWS(wsServer *WSServer, w http.ResponseWriter, r *http.Request, claims 
 	}
 
 	client := newClient(conn, wsServer, claims.UserId, nil)
-	client.joinRoom(claims.RoomId, claims.UserId, claims.Username)
+	client.joinGame(claims.RoomId, claims.UserId)
 
 	go client.readPump()
 	go client.writePump()
 }
 
-func (c *Client) joinRoom(roomId, userId, username string) {
-	room := c.wsServer.findRoomById(roomId)
-	if room == nil {
-		room = c.wsServer.createRoom(roomId)
+func (c *Client) joinGame(gameId, userId string) {
+	game := c.wsServer.findGameById(gameId)
+	if game == nil {
+		game = c.wsServer.createGame(gameId)
 	}
 
-	user := &user.User{Id: userId, Name: username}
+	user, err := c.wsServer.findUserById(gameId, userId)
+	if err != nil {
+		return
+	}
 
-	if c.room == nil {
-		c.room = room
-		room.register <- c
+	if c.game == nil {
+		c.game = game
+		game.register <- c
 
 		message := Message{Action: RoomJoinedAction, User: user}
-		c.room.broadcastToOnlyOthers <- &message
+		c.game.broadcastToOnlyOthers <- &message
 	}
+}
+
+func (c *Client) handleVoteSubmittedMessage(message Message) {
+	// TODO: save it to redis and broadcast private vote to all
+	value, err := strconv.Atoi(message.Message)
+	if err != nil || !vote.IsValidValue(value) {
+		return
+	}
+
+	// Save the actual value to Redis
+	// vote := &vote.Vote{UserId: message.User.Id, Value: value}
+
+	if vote.IsValueAccountable(value) {
+		message.Message = strconv.Itoa(vote.Private)
+	}
+	
+	c.game.broadcast <- &message
 }
