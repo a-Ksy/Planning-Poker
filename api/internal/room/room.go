@@ -73,8 +73,8 @@ func (r *Room) SetAdmin(user *user.User) {
 	r.admin = user
 }
 
-func (r *Room) GetVotes() vote.Votes {
-	return r.votes
+func (r *Room) GetVotes() *vote.Votes {
+	return &r.votes
 }
 
 func (r *Room) String() string {

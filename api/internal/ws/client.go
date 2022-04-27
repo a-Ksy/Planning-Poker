@@ -173,12 +173,12 @@ func (c *Client) handleVoteSubmittedMessage(message Message) {
 		return
 	}
 
-	// Save the actual value to Redis
-	// vote := &vote.Vote{UserId: message.User.Id, Value: value}
+	v := vote.NewVote(message.User.GetId(), value)
+	c.wsServer.saveVote(c.game.id, v)
 
 	if vote.IsValueAccountable(value) {
 		message.Message = strconv.Itoa(vote.Private)
 	}
-	
+
 	c.game.broadcast <- &message
 }

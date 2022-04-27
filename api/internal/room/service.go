@@ -2,6 +2,7 @@ package room
 
 import (
 	"fmt"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
@@ -11,6 +12,7 @@ type Service interface {
 	CreateRoom(roomName, adminUsername string) (*Room, error)
 	GetRoom(roomId string) (*Room, error)
 	JoinRoom(roomId, username string) (*Room, *user.User, error)
+	SetVote(roomId string, vote *vote.Vote) error
 }
 
 type service struct {
@@ -55,4 +57,18 @@ func (s *service) JoinRoom(roomId, username string) (*Room, *user.User, error) {
 	}
 
 	return room, user, nil
+}
+
+func (s *service) SetVote(roomId string, vote *vote.Vote) error {
+	room, err := s.roomRepository.GetRoom(roomId)
+	if err != nil {
+		return err
+	}
+
+	room.GetVotes().SetVote(vote)
+	err = s.roomRepository.SetRoom(room)
+	if err != nil {
+		return err
+	}
+	return nil
 }

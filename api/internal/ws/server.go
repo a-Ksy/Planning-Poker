@@ -3,6 +3,7 @@ package ws
 import (
 	"github.com/a-Ksy/Planning-Poker/backend/internal/room"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 )
 
 type WSServer struct {
@@ -47,4 +48,8 @@ func (s *WSServer) findUserById(roomId, userId string) (*user.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *WSServer) saveVote(roomId string, vote *vote.Vote) error {
+	return s.roomService.SetVote(roomId, vote)
 }
