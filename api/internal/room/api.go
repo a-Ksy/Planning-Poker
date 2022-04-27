@@ -67,14 +67,17 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 
 func (c *controller) GetRoom(ctx *gin.Context) {
 	roomId := ctx.Param("id")
-	c.logger.Info(fmt.Sprintln("GetRoom called with roomId:", roomId))
+	c.logger.Info(fmt.Sprintln("GetRoomBasedOnGameState called with roomId:", roomId))
 
 	if roomId == "" {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, "'roomId' should be provided")
 		return
 	}
 
-	room, err := c.service.GetRoom(roomId)
+	userId, _ := auth.GetUserId(ctx)
+	fmt.Println("userId is", userId)
+
+	room, err := c.service.GetRoomWithVotesBasedOnGameState(roomId, userId)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, err)
 		return

@@ -1,6 +1,8 @@
 package vote
 
-import "errors"
+import (
+	"errors"
+)
 
 type Votes map[string]int
 
@@ -19,4 +21,15 @@ func (v Votes) GetVote(userId string) (int, error) {
 		return -1, errors.New("couldn't find vote with the given userId")
 	}
 	return val, nil
+}
+
+func (v Votes) HideVotesExceptUserId(userId string) {
+	for id, val := range v {
+		if userId == id {
+			continue
+		}
+		if IsValueAccountable(val) {
+			v[id] = Private
+		}
+	}
 }

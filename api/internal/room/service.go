@@ -11,6 +11,7 @@ import (
 type Service interface {
 	CreateRoom(roomName, adminUsername string) (*Room, error)
 	GetRoom(roomId string) (*Room, error)
+	GetRoomWithVotesBasedOnGameState(roomId, userId string) (*Room, error)
 	JoinRoom(roomId, username string) (*Room, *user.User, error)
 	SetVote(roomId string, vote *vote.Vote) error
 }
@@ -39,12 +40,24 @@ func (s *service) GetRoom(roomId string) (*Room, error) {
 		s.logger.Error(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return nil, err
 	}
+	return room, nil
+}
+
+func (s *service) GetRoomWithVotesBasedOnGameState(roomId, userId string) (*Room, error) {
+	room, err := s.GetRoom(roomId)
+	if err != nil {
+		return nil, err
+	}
+
+	if room.gameState == InProgress {
+		room.GetVotes().HideVotesExceptUserId(userId)
+	}
 
 	return room, nil
 }
 
 func (s *service) JoinRoom(roomId, username string) (*Room, *user.User, error) {
-	room, err := s.GetRoom(roomId)
+	room, err := s.GetRoomWithVotesBasedOnGameState(roomId, "")
 	if err != nil {
 		s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return nil, nil, err

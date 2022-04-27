@@ -39,16 +39,6 @@ func GenerateToken(user *user.User, roomId string, isAdmin bool) (Token, error) 
 	return Token{tokenString, strconv.Itoa(int(expirationTime.Unix()))}, nil
 }
 
-func CheckAuthToken(ctx *gin.Context) {
-	_, err := getAllClaims(ctx)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err.Error())
-		return
-	}
-
-	ctx.Next()
-}
-
 func IsUserAuthorizedInRoom(ctx *gin.Context) {
 	claims, err := getAllClaims(ctx)
 	if err != nil {
@@ -96,4 +86,13 @@ func getAllClaimsFromToken(token string) (*Claims, error) {
 		return nil, errors.New("authorization token is invalid")
 	}
 	return claims, nil
+}
+
+func GetUserId(ctx *gin.Context) (string, error) {
+	claims, err := getAllClaims(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	return claims.UserClaims.UserId, nil
 }
