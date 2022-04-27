@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Room, roomJoined } from "../features/room";
 import { Vote, Votes, voteSubmitted } from "../features/vote";
 import { User } from "../features/user";
-import { roomActions, gameActions } from "../constants";
+import { roomActions, gameActions, BASE_WS_URL } from "../constants";
 class Message {
   action: string = "";
   user: User = null;
@@ -39,9 +39,7 @@ export const WSWrapper = (props) => {
   // subscribe to the WebSocket
   useEffect(() => {
     if (isBrowser && userState.token !== null) {
-      const ws = new WebSocket(
-        `ws://localhost:8080/api/room/ws/${userState.token}`
-      );
+      const ws = new WebSocket(`${BASE_WS_URL}/room/ws/${userState.token}`);
       setWs(ws);
     }
   }, [userState.token]);

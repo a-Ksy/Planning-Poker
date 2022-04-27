@@ -1,3 +1,6 @@
+export const BASE_URL = "http://localhost:8080/api";
+export const BASE_WS_URL = "ws://localhost:8080/api";
+
 export const localConstants = {
   ROOM_NAME_KEY: "roomName",
   USERNAME_KEY: "username",
