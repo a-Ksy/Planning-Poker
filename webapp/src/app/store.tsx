@@ -10,7 +10,7 @@ import { roomReducer } from "../features/room";
 import { userReducer } from "../features/user";
 import { voteReducer } from "../features/vote";
 import { historyReducer } from "../features/history";
-import { setCookies } from "cookies-next";
+import { setCookies, getCookie } from "cookies-next";
 import { cookieConstants } from "../constants";
 
 const combinedReducer = combineReducers({
@@ -51,6 +51,10 @@ const reducer = (
       },
     };
   } else if (action.type === "room/getRoom/fulfilled") {
+    const user = getCookie(cookieConstants.USER_KEY);
+    const userAsJson = JSON.parse(user.toString());
+    const userId = userAsJson["id"];
+    const previousVote = action.payload["votes"][userId];
     return {
       history: state.history,
       user: state.user,
@@ -63,7 +67,10 @@ const reducer = (
       },
       vote: {
         votes: action.payload["votes"],
-        selectedVoteCard: state.vote.selectedVoteCard,
+        selectedVoteCard:
+          previousVote !== undefined && previousVote !== null
+            ? previousVote
+            : state.vote.selectedVoteCard,
       },
     };
   } else {

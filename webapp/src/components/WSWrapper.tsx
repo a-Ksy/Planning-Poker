@@ -52,11 +52,13 @@ export const WSWrapper = (props) => {
       switch (message?.action) {
         case roomActions.ROOM_JOINED:
           dispatch(roomJoined(message.user));
+          break;
         case gameActions.VOTE_SUBMITTED:
           const vote: Vote = new Vote();
           vote.userId = message.user.id;
           vote.value = parseInt(message.message);
           dispatch(voteSubmitted(JSON.stringify(vote)));
+          break;
       }
     };
   }
