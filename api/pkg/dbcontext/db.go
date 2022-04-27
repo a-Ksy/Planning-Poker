@@ -3,8 +3,13 @@ package db
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/go-redis/redis/v8"
+)
+
+const (
+	expirationDuration = 2 * time.Hour
 )
 
 type DBContext interface {
@@ -33,7 +38,7 @@ func (c *dbcontext) Set(key string, value interface{}) error {
 	if err != nil {
 		return err
 	}
-	return c.rdb.Set(context.Background(), key, p, 0).Err()
+	return c.rdb.Set(context.Background(), key, p, expirationDuration).Err()
 }
 
 func (c *dbcontext) Get(key string, dest interface{}) error {
