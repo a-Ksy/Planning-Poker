@@ -7,6 +7,9 @@ export const cookieConstants = {
   USER_KEY: "user",
 };
 
+export const ROOM_NAME_INPUT_LIMIT = 30;
+export const NAME_INPUT_LIMIT = 12;
+
 export const roomActions = {
   ROOM_JOINED: "room-joined",
 };

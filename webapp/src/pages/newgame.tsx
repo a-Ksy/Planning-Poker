@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { FormControl, Input, Text, Stack, Box, Button } from "@chakra-ui/react";
+import {
+  FormControl,
+  Input,
+  Text,
+  Stack,
+  Box,
+  Button,
+  FormErrorMessage,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import { Navbar } from "../components/Navbar";
 import { Container } from "../components/Container";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { localConstants } from "../constants";
+import { localConstants, ROOM_NAME_INPUT_LIMIT } from "../constants";
 import { useAppDispatch } from "../app/hooks";
 import { setHistory } from "../features/history";
 
@@ -28,6 +36,8 @@ function NewGame() {
     localStorage.setItem(localConstants.ROOM_NAME_KEY, name);
   };
 
+  const isError = name.length >= ROOM_NAME_INPUT_LIMIT;
+
   return (
     <Box height="100vh">
       <Navbar />
@@ -43,20 +53,26 @@ function NewGame() {
           </Text>
           <Box minW={{ base: "90%", md: "468px" }}>
             <Stack spacing="4rem" p="2rem">
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={isError}>
                 <Input
                   id="name"
                   placeholder="e.g sprint-planning-2"
                   value={name}
                   onChange={handleNameChange}
                 />
+                {isError && (
+                  <FormErrorMessage>
+                    Room name should be less than {ROOM_NAME_INPUT_LIMIT}{" "}
+                    characters.
+                  </FormErrorMessage>
+                )}
               </FormControl>
               <Link href="/newplayer">
                 <Button
                   type="submit"
                   width="full"
                   colorScheme="red"
-                  isDisabled={name === ""}
+                  isDisabled={name === "" || isError}
                   rightIcon={<ArrowForwardIcon />}
                   onClick={() => handleNewGame()}
                 >

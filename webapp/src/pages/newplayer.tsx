@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   FormHelperText,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import router from "next/router";
 import { Navbar } from "../components/Navbar";
@@ -15,7 +16,7 @@ import { Container } from "../components/Container";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createRoom, joinRoom } from "../features/room";
 import { setName } from "../features/user";
-import { localConstants } from "../constants";
+import { localConstants, NAME_INPUT_LIMIT } from "../constants";
 
 function getStoredUsername(): string {
   if (typeof window !== "undefined" && window.localStorage) {
@@ -70,6 +71,8 @@ function NewPlayer() {
     });
   };
 
+  const isError = name.length >= NAME_INPUT_LIMIT;
+
   return (
     <Box height="100vh">
       <Navbar />
@@ -85,22 +88,28 @@ function NewPlayer() {
           </Text>
           <Box minW={{ base: "90%", md: "468px" }}>
             <Stack spacing="4rem" p="2rem">
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={isError}>
                 <Input
                   id="name"
                   placeholder="e.g pokerface12"
                   value={name}
                   onChange={handleNameChange}
                 />
-                <FormHelperText>
-                  Just to let other players know who you are 🌱
-                </FormHelperText>
+                {!isError ? (
+                  <FormHelperText>
+                    Just to let other players know who you are 🌱
+                  </FormHelperText>
+                ) : (
+                  <FormErrorMessage>
+                    Usename should be less than {NAME_INPUT_LIMIT} characters.
+                  </FormErrorMessage>
+                )}
               </FormControl>
               <Button
                 type="submit"
                 width="full"
                 colorScheme="green"
-                isDisabled={name === ""}
+                isDisabled={name === "" || isError}
                 onClick={() => handleRoomAction()}
               >
                 Let's begin!
