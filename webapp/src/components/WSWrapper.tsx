@@ -71,7 +71,6 @@ export const WSWrapper = (props) => {
   // send selected
   useEffect(() => {
     if (ws !== null) {
-      console.log(voteState.selectedVoteCard);
       const message: Message = Message.createMessage(
         user,
         gameActions.VOTE_SUBMITTED,
