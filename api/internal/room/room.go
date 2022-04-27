@@ -1,7 +1,6 @@
 package room
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
@@ -10,12 +9,20 @@ import (
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 )
 
+type GameState string
+
+const (
+	InProgress GameState = "IN_PROGRESS"
+	CardsRevealed GameState = "CARDS_REVEALED"
+)
+
 type Room struct {
 	id    string      `json:"id"`
 	name  string      `json:"name"`
 	users []user.User `json:"users"`
 	admin *user.User   `json:"admin"`
 	votes vote.Votes `json:"votes"`
+	gameState GameState	`json:"gameState"`
 }
 
 func NewRoom(name string) *Room {
@@ -24,7 +31,9 @@ func NewRoom(name string) *Room {
 		name: name,
 		users: []user.User{},
 		admin: nil,
-		votes: vote.NewVotes()}
+		votes: vote.NewVotes(),
+		gameState: InProgress,
+	}
 }
 
 func NewRoomWithAdmin(name string, admin *user.User) *Room {
@@ -77,31 +86,14 @@ func (r *Room) GetVotes() *vote.Votes {
 	return &r.votes
 }
 
+func (r *Room) GetGameState() GameState {
+	return r.gameState
+}
+
+func (r *Room) SetGameState(state GameState) {
+	r.gameState = state
+}
+
 func (r *Room) String() string {
 	return fmt.Sprintln("Id:", r.id, "Name:", r.name, "Users:", r.users, "Admin:", r.admin)
-}
-
-func (r *Room) MarshalJSON() ([]byte, error) {
-	return json.Marshal(RoomDto{
-		r.id,
-		r.name,
-		r.users,
-		r.admin,
-		r.votes,
-	})
-}
-
-func (r *Room) UnmarshalJSON(b []byte) error {
-	temp := &RoomDto{}
-
-	if err := json.Unmarshal(b, &temp); err != nil {
-		return err
-	}
-
-	r.id = temp.Id
-	r.name = temp.Name
-	r.users = temp.Users
-	r.admin = temp.Admin
-	r.votes = temp.Votes
-	return nil
 }

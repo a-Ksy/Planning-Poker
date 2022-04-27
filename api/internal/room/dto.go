@@ -12,6 +12,7 @@ type RoomDto struct {
 	Users []user.User `json:"users"`
 	Admin *user.User   `json:"admin"`
 	Votes vote.Votes `json:"votes"`
+	GameState GameState `json:"gameState"`
 }
 
 type RoomCreation struct {
