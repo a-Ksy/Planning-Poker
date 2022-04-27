@@ -47,16 +47,19 @@ export const PokerCard = (props) => {
           borderRadius="xl"
           h="5rem"
           w="3rem"
+          transition="0.2s ease"
           borderWidth={userOwnsTheCard && "5px"}
           borderColor={userOwnsTheCard && borderColor[colorMode]}
         />
       </Center>
       <Center>
-        {admin.id === user.id && <Text mr={1.5} fontSize="xs">{`👑`}</Text>}
+        {admin.id === user.id && (
+          <Text mr={2} fontSize="xs" mt={2}>{`👑`}</Text>
+        )}
         <Text
           isTruncated
           textAlign="center"
-          mt={1.5}
+          mt={2}
           fontWeight="semibold"
           maxWidth="6rem"
         >

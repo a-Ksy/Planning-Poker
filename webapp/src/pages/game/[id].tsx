@@ -8,7 +8,7 @@ import UserPersistency from "../../components/UserPersistency";
 import { WSWrapper } from "../../components/WSWrapper";
 
 function Game() {
-  const { name, users } = useAppSelector((state) => state.room);
+  const { users } = useAppSelector((state) => state.room);
 
   if (users !== null) {
     return (
@@ -17,15 +17,12 @@ function Game() {
         <Box height="100vh">
           <Navbar />
           <Container
-            h="100%"
+            h="100vh"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
           >
             <VStack spacing="5rem">
-              <Text fontSize="xl" fontWeight="semibold">
-                {name}
-              </Text>
               <Poker />
               <VoteCards />
             </VStack>

@@ -1,4 +1,4 @@
-import { Grid, GridItem, Text } from "@chakra-ui/react";
+import { Grid, Box, Text } from "@chakra-ui/react";
 import { VoteCard } from "./VoteCard";
 import { voteCardValues } from "../constants";
 
@@ -19,10 +19,15 @@ export const VoteCards = () => {
   ];
 
   return (
-    <Grid templateColumns={`repeat(${sequence.length}, 1fr)`} gap={5}>
-      {sequence.map((value) => {
-        return <VoteCard key={value} value={value} />;
-      })}
-    </Grid>
+    <Box>
+      <Text fontSize="lg" textAlign="center" mb={5}>
+        Choose your card 👇
+      </Text>
+      <Grid templateColumns={`repeat(${sequence.length}, 1fr)`} gap={5}>
+        {sequence.map((value) => {
+          return <VoteCard key={value} value={value} />;
+        })}
+      </Grid>
+    </Box>
   );
 };

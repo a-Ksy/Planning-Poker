@@ -27,8 +27,8 @@ export const VoteCard = (props) => {
       borderWidth="2px"
       borderColor="blue.400"
       borderRadius="xl"
-      h="5rem"
-      w="3rem"
+      h="5.5rem"
+      w="3.5rem"
       cursor="pointer"
       transition="0.2s ease"
       _hover={
@@ -42,6 +42,7 @@ export const VoteCard = (props) => {
       <Center h="100%">
         <Text
           fontWeight="bold"
+          fontSize="lg"
           color={selectedVoteCard === value ? "white" : "blue.400"}
         >
           {value === voteCardValues.CONFUSED ? "?" : value}
