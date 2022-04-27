@@ -43,6 +43,7 @@ const reducer = (
         name: action.payload["room"]["name"],
         users: action.payload["room"]["users"],
         admin: action.payload["room"]["admin"],
+        gameState: action.payload["room"]["gameState"],
       },
       vote: {
         votes: action.payload["room"]["votes"],
@@ -58,6 +59,7 @@ const reducer = (
         name: action.payload["name"],
         users: action.payload["users"],
         admin: action.payload["admin"],
+        gameState: action.payload["gameState"],
       },
       vote: {
         votes: action.payload["votes"],

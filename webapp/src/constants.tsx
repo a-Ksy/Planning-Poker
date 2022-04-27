@@ -21,6 +21,11 @@ export const gameActions = {
   VOTE_SUBMITTED: "vote-submitted",
 };
 
+export const gameStates = {
+  IN_PROGRESS: "IN_PROGRESS",
+  CARDS_REVEALED: "CARDS_REVEALED",
+};
+
 export const voteCardValues = {
   CONFUSED: -1, // the '?' card
   NOT_SELECTED: -2,

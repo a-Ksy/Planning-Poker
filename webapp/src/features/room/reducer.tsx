@@ -1,12 +1,14 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { User } from "../user";
 import { createRoom, getRoom, joinRoom, roomJoined } from "./actions";
+import { gameStates } from "../../constants";
 
 type RoomState = {
   id: string;
   name: string;
   users: User[];
   admin: User;
+  gameState: string;
   pending: boolean;
   error: boolean;
 };
@@ -16,6 +18,7 @@ const initialState: RoomState = {
   name: "my-planning-room",
   users: null,
   admin: null,
+  gameState: gameStates.IN_PROGRESS,
   pending: false,
   error: false,
 };
