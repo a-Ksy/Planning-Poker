@@ -38,8 +38,31 @@ const reducer = (
     return {
       history: state.history,
       user: action.payload["user"],
-      room: action.payload["room"],
-      vote: state.vote,
+      room: {
+        id: action.payload["room"]["id"],
+        name: action.payload["room"]["name"],
+        users: action.payload["room"]["users"],
+        admin: action.payload["room"]["admin"],
+      },
+      vote: {
+        votes: action.payload["room"]["votes"],
+        selectedVoteCard: state.vote.selectedVoteCard,
+      },
+    };
+  } else if (action.type === "room/getRoom/fulfilled") {
+    return {
+      history: state.history,
+      user: state.user,
+      room: {
+        id: action.payload["id"],
+        name: action.payload["name"],
+        users: action.payload["users"],
+        admin: action.payload["admin"],
+      },
+      vote: {
+        votes: action.payload["votes"],
+        selectedVoteCard: state.vote.selectedVoteCard,
+      },
     };
   } else {
     return combinedReducer(state, action);

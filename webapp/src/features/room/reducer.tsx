@@ -34,10 +34,7 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.error = true;
     })
     .addCase(getRoom.fulfilled, (state, { payload }) => {
-      state.id = payload.id;
-      state.name = payload.name;
-      state.users = payload.users;
-      state.admin = payload.admin;
+      // The payload is set in the combinedReducer as it contains both user and room information
       state.pending = false;
     })
     .addCase(getRoom.pending, (state) => {
