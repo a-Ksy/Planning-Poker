@@ -43,9 +43,14 @@ function UserPersistency() {
     if (
       user === undefined ||
       user === null ||
-      tokenHasExpired(user.expiresAt)
+      tokenHasExpired(user.expiresAt) ||
+      user.roomId !== query.id
     ) {
       removeCookies(cookieConstants.USER_KEY);
+      if (user.roomId !== query.id) {
+        dispatch(setHistory("Game"));
+        dispatch(setId(query.id.toString()));
+      }
       router.push(`/newplayer`);
       return;
     }
