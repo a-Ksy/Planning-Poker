@@ -12,7 +12,7 @@ export const VoteCard = (props) => {
   );
 
   const { colorMode } = useColorMode();
-  const bgColorHovered = { light: "blue.100", dark: "blue.900" };
+  const bgColorHovered = { light: "blue.50", dark: "blue.900" };
 
   const handleVoteCardClick = () => {
     if (selectedVoteCard === value) {
@@ -25,10 +25,10 @@ export const VoteCard = (props) => {
   return (
     <Box
       borderWidth="2px"
-      borderColor="blue.400"
+      borderColor="blue.dark"
       borderRadius="xl"
       h="5.5rem"
-      w="3.5rem"
+      w="3.25rem"
       cursor="pointer"
       transition="0.2s ease"
       _hover={
@@ -37,13 +37,13 @@ export const VoteCard = (props) => {
         }
       }
       onClick={() => handleVoteCardClick()}
-      bg={selectedVoteCard === value ? "blue.400" : "none"}
+      bg={selectedVoteCard === value ? "blue.dark" : "none"}
     >
       <Center h="100%">
         <Text
           fontWeight="bold"
           fontSize="lg"
-          color={selectedVoteCard === value ? "white" : "blue.400"}
+          color={selectedVoteCard === value ? "white" : "blue.dark"}
         >
           {value === voteCardValues.CONFUSED ? "?" : value}
         </Text>

@@ -27,6 +27,8 @@ const borderRadius = {
 const theme = extendTheme({
   colors: {
     black: "#16161D",
+    "blue.light": "#D7E9FF",
+    "blue.dark": "#3993FF",
   },
   fonts,
   breakpoints,

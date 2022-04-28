@@ -1,4 +1,4 @@
-import { Text, VStack, Box } from "@chakra-ui/react";
+import { Center, Flex, Box, Spacer } from "@chakra-ui/react";
 import { Navbar } from "../../components/Navbar";
 import { Container } from "../../components/Container";
 import { useAppSelector } from "../../app/hooks";
@@ -16,16 +16,12 @@ function Game() {
         <UserPersistency />
         <Box height="100vh">
           <Navbar />
-          <Container
-            h="100vh"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <VStack spacing="5rem">
+          <Container h="100vh" flexDirection="column" pb={10} pt={20}>
+            <Center h="100%">
               <Poker />
-              <VoteCards />
-            </VStack>
+            </Center>
+            <Spacer />
+            <VoteCards />
           </Container>
         </Box>
       </WSWrapper>
