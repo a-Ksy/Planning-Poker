@@ -15,6 +15,7 @@ type Service interface {
 	JoinRoom(roomId, username string) (*Room, *user.User, error)
 	SetVote(roomId string, vote *vote.Vote) error
 	SetGameState(roomId string, gameState GameState) error
+	ResetVotingSession(roomId string) error
 }
 
 type service struct {
@@ -94,6 +95,22 @@ func (s *service) SetGameState(roomId string, gameState GameState) error {
 	}
 
 	room.SetGameState(gameState)
+	err = s.roomRepository.SetRoom(room)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *service) ResetVotingSession(roomId string) error {
+	room, err := s.GetRoom(roomId)
+	if err != nil {
+		return err
+	}
+
+	room.SetGameState(InProgress)
+	room.ResetVotes()
+
 	err = s.roomRepository.SetRoom(room)
 	if err != nil {
 		return err

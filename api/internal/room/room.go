@@ -94,6 +94,10 @@ func (r *Room) SetGameState(state GameState) {
 	r.gameState = state
 }
 
+func (r *Room) ResetVotes() {
+	r.votes = vote.NewVotes()
+}
+
 func (r *Room) String() string {
 	return fmt.Sprintln("Id:", r.id, "Name:", r.name, "Users:", r.users, "Admin:", r.admin)
 }

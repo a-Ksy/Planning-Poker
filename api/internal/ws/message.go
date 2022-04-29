@@ -11,6 +11,10 @@ const (
 	RoomJoinedAction = "room-joined"
 	VoteSubmittedAction = "vote-submitted"
 	CardsRevealedAction = "cards-revealed"
+	RevealCardsAction = "reveal-cards"
+	StartNewVotingAction = "start-new-voting"
+	NewVotingStartedAction = "new-voting-started"
+
 )
 
 type Message struct {

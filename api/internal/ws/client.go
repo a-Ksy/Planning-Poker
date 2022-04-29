@@ -124,8 +124,11 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 	switch message.Action {
 		case VoteSubmittedAction:
 			c.handleVoteSubmittedMessage(message)
-		case CardsRevealedAction:
-			c.handleCardsRevealedMessage(message)
+		case RevealCardsAction:
+			c.handleRevealCardsMessage(message)
+		case StartNewVotingAction:
+			c.handleStartNewVotingMessage(message)
+
 	}
 }
 
@@ -184,7 +187,7 @@ func (c *Client) handleVoteSubmittedMessage(message Message) {
 	c.game.broadcast <- &message
 }
 
-func (c *Client) handleCardsRevealedMessage(message Message) {
+func (c *Client) handleRevealCardsMessage(message Message) {
 	votes, err := c.wsServer.revealCards(c.game.id)
 	if err != nil {
 		return
@@ -197,4 +200,14 @@ func (c *Client) handleCardsRevealedMessage(message Message) {
 
 	revealedVotes := Message{Action: CardsRevealedAction, User: message.User, Message: string(votesJson)}
 	c.game.broadcast <- &revealedVotes
+}
+
+func (c *Client) handleStartNewVotingMessage(message Message) {
+	err := c.wsServer.resetVotingSession(c.game.id)
+	if err != nil {
+		return
+	}
+
+	message.Action = NewVotingStartedAction
+	c.game.broadcast <- &message
 }

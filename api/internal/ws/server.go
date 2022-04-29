@@ -67,3 +67,11 @@ func (s *WSServer) revealCards(roomId string) (*vote.Votes, error) {
 	s.roomService.SetGameState(roomId, room.CardsRevealed)
 	return r.GetVotes(), nil
 }
+
+func (s *WSServer) resetVotingSession(roomId string) error {
+	err := s.roomService.ResetVotingSession(roomId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
