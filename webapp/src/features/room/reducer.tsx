@@ -6,6 +6,8 @@ import {
   joinRoom,
   revealCards,
   roomJoined,
+  resetVoting,
+  setGameState,
 } from "./actions";
 import { gameStates } from "../../constants";
 
@@ -16,6 +18,7 @@ type RoomState = {
   admin: User;
   gameState: string;
   revealCards: boolean;
+  resetVoting: boolean;
   pending: boolean;
   error: boolean;
 };
@@ -27,6 +30,7 @@ const initialState: RoomState = {
   admin: null,
   gameState: gameStates.IN_PROGRESS,
   revealCards: false,
+  resetVoting: false,
   pending: false,
   error: false,
 };
@@ -77,7 +81,12 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.users = prevUsers;
     })
     .addCase(revealCards, (state, { payload }) => {
-      state.gameState = gameStates.CARDS_REVEALED;
       state.revealCards = payload;
+    })
+    .addCase(resetVoting, (state, { payload }) => {
+      state.resetVoting = payload;
+    })
+    .addCase(setGameState, (state, { payload }) => {
+      state.gameState = payload;
     });
 });

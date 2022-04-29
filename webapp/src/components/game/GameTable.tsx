@@ -1,6 +1,6 @@
 import { Box, Center, Text, Button } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { revealCards } from "../../features/room";
+import { revealCards, resetVoting } from "../../features/room";
 import { voteCardValues, gameStates } from "../../constants";
 
 export const GameTable = () => {
@@ -20,6 +20,10 @@ export const GameTable = () => {
 
   const handleRevealCards = () => {
     dispatch(revealCards(true));
+  };
+
+  const handleResetVoting = () => {
+    dispatch(resetVoting(true));
   };
 
   const getTableContentBasedOnGameState = () => {
@@ -58,7 +62,9 @@ export const GameTable = () => {
           bg="gray.600"
           color="white"
           size="lg"
-          onClick={() => {}}
+          onClick={() => {
+            handleResetVoting();
+          }}
         >
           Start new voting
         </Button>

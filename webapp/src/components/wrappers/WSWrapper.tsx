@@ -1,9 +1,26 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState, useEffect } from "react";
-import { Room, roomJoined, revealCards } from "../../features/room";
-import { Vote, Votes, voteSubmitted, setVotes } from "../../features/vote";
+import {
+  Room,
+  roomJoined,
+  revealCards,
+  resetVoting,
+  setGameState,
+} from "../../features/room";
+import {
+  Vote,
+  Votes,
+  voteSubmitted,
+  setVotes,
+  selectVoteCard,
+} from "../../features/vote";
 import { User } from "../../features/user";
-import { roomActions, gameActions, BASE_WS_URL } from "../../constants";
+import {
+  messages,
+  BASE_WS_URL,
+  voteCardValues,
+  gameStates,
+} from "../../constants";
 class Message {
   action: string = "";
   user: User = null;
@@ -50,19 +67,27 @@ export const WSWrapper = (props) => {
       const message: Message = Message.fromJSON(JSON.parse(event.data));
 
       switch (message?.action) {
-        case roomActions.ROOM_JOINED:
+        case messages.ROOM_JOINED:
           dispatch(roomJoined(message.user));
           break;
-        case gameActions.VOTE_SUBMITTED:
+        case messages.VOTE_SUBMITTED:
           const vote: Vote = new Vote();
           vote.userId = message.user.id;
           vote.value = parseInt(message.message);
           dispatch(voteSubmitted(JSON.stringify(vote)));
           break;
-        case gameActions.CARDS_REVEALED:
+        case messages.CARDS_REVEALED:
           const votes = JSON.parse(message.message);
+          dispatch(setGameState(gameStates.CARDS_REVEALED));
           dispatch(revealCards(true));
           dispatch(setVotes(votes));
+          break;
+        case messages.NEW_VOTING_STARTED:
+          dispatch(setGameState(gameStates.IN_PROGRESS));
+          dispatch(revealCards(false));
+          dispatch(resetVoting(false));
+          dispatch(setVotes(new Object()));
+          dispatch(selectVoteCard(voteCardValues.EMPTY));
           break;
       }
     };
@@ -75,10 +100,14 @@ export const WSWrapper = (props) => {
 
   // send selected vote card
   useEffect(() => {
+    if (voteState.selectedVoteCard === voteCardValues.EMPTY) {
+      return;
+    }
+
     if (ws !== null) {
       const message: Message = Message.createMessage(
         user,
-        gameActions.VOTE_SUBMITTED,
+        messages.VOTE_SUBMITTED,
         voteState.selectedVoteCard.toString()
       );
       ws.send(message.toString());
@@ -87,15 +116,39 @@ export const WSWrapper = (props) => {
 
   // send reveal card request
   useEffect(() => {
+    if (
+      !roomState.revealCards ||
+      roomState.gameState !== gameStates.IN_PROGRESS
+    ) {
+      return;
+    }
     if (ws !== null) {
       const message: Message = Message.createMessage(
         user,
-        gameActions.CARDS_REVEALED,
+        messages.REVEAL_CARDS,
         ""
       );
       ws.send(message.toString());
     }
   }, [roomState.revealCards]);
+
+  // send reset voting request
+  useEffect(() => {
+    if (
+      !roomState.resetVoting ||
+      roomState.gameState !== gameStates.CARDS_REVEALED
+    ) {
+      return;
+    }
+    if (ws !== null) {
+      const message: Message = Message.createMessage(
+        user,
+        messages.START_NEW_VOTING,
+        ""
+      );
+      ws.send(message.toString());
+    }
+  }, [roomState.resetVoting]);
 
   return <>{props.children}</>;
 };
