@@ -19,6 +19,7 @@ export const roomActions = {
 
 export const gameActions = {
   VOTE_SUBMITTED: "vote-submitted",
+  CARDS_REVEALED: "cards-revealed",
 };
 
 export const gameStates = {

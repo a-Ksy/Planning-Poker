@@ -1,6 +1,12 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { User } from "../user";
-import { createRoom, getRoom, joinRoom, roomJoined } from "./actions";
+import {
+  createRoom,
+  getRoom,
+  joinRoom,
+  revealCards,
+  roomJoined,
+} from "./actions";
 import { gameStates } from "../../constants";
 
 type RoomState = {
@@ -9,6 +15,7 @@ type RoomState = {
   users: User[];
   admin: User;
   gameState: string;
+  revealCards: boolean;
   pending: boolean;
   error: boolean;
 };
@@ -19,6 +26,7 @@ const initialState: RoomState = {
   users: null,
   admin: null,
   gameState: gameStates.IN_PROGRESS,
+  revealCards: false,
   pending: false,
   error: false,
 };
@@ -67,5 +75,9 @@ export const roomReducer = createReducer(initialState, (builder) => {
       }
       prevUsers.push(payload);
       state.users = prevUsers;
+    })
+    .addCase(revealCards, (state, { payload }) => {
+      state.gameState = gameStates.CARDS_REVEALED;
+      state.revealCards = payload;
     });
 });

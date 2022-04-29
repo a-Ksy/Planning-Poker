@@ -1,14 +1,14 @@
 import { getCookie, checkCookies, removeCookies } from "cookies-next";
-import { cookieConstants } from "../constants";
-import { User } from "../features/user";
+import { cookieConstants } from "../../constants";
+import { User } from "../../features/user";
 import { CookieValueTypes } from "cookies-next/lib/types";
-import { useAppDispatch } from "../app/hooks";
-import { setUser } from "../features/user";
-import { getRoom } from "../features/room";
-import { setId } from "../features/history";
+import { useAppDispatch } from "../../app/hooks";
+import { setUser } from "../../features/user";
+import { getRoom } from "../../features/room";
+import { setId } from "../../features/history";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { setHistory } from "../features/history";
+import { setHistory } from "../../features/history";
 
 function tokenHasExpired(expiresAt: string): boolean {
   const expirationTimestamp: number = Date.parse(expiresAt);

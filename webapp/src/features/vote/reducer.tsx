@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { voteCardValues } from "../../constants";
-import { selectVoteCard, voteSubmitted } from "./actions";
+import { selectVoteCard, voteSubmitted, setVotes } from "./actions";
 import { Vote } from "./types";
 
 type VoteState = {
@@ -21,5 +21,8 @@ export const voteReducer = createReducer(initialState, (builder) => {
     .addCase(voteSubmitted, (state, { payload }) => {
       const vote: Vote = JSON.parse(payload);
       state.votes[vote.userId] = vote.value;
+    })
+    .addCase(setVotes, (state, { payload }) => {
+      state.votes = payload;
     });
 });

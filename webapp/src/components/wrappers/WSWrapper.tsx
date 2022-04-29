@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState, useEffect } from "react";
-import { Room, roomJoined } from "../features/room";
-import { Vote, Votes, voteSubmitted } from "../features/vote";
-import { User } from "../features/user";
-import { roomActions, gameActions, BASE_WS_URL } from "../constants";
+import { Room, roomJoined, revealCards } from "../../features/room";
+import { Vote, Votes, voteSubmitted, setVotes } from "../../features/vote";
+import { User } from "../../features/user";
+import { roomActions, gameActions, BASE_WS_URL } from "../../constants";
 class Message {
   action: string = "";
   user: User = null;
@@ -59,6 +59,11 @@ export const WSWrapper = (props) => {
           vote.value = parseInt(message.message);
           dispatch(voteSubmitted(JSON.stringify(vote)));
           break;
+        case gameActions.CARDS_REVEALED:
+          const votes = JSON.parse(message.message);
+          dispatch(revealCards(true));
+          dispatch(setVotes(votes));
+          break;
       }
     };
   }
@@ -68,7 +73,7 @@ export const WSWrapper = (props) => {
   user.id = userState.id;
   user.name = userState.name;
 
-  // send selected
+  // send selected vote card
   useEffect(() => {
     if (ws !== null) {
       const message: Message = Message.createMessage(
@@ -79,6 +84,18 @@ export const WSWrapper = (props) => {
       ws.send(message.toString());
     }
   }, [voteState.selectedVoteCard]);
+
+  // send reveal card request
+  useEffect(() => {
+    if (ws !== null) {
+      const message: Message = Message.createMessage(
+        user,
+        gameActions.CARDS_REVEALED,
+        ""
+      );
+      ws.send(message.toString());
+    }
+  }, [roomState.revealCards]);
 
   return <>{props.children}</>;
 };

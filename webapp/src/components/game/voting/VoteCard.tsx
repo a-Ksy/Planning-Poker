@@ -1,7 +1,8 @@
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { selectVoteCard } from "../features/vote";
-import { voteCardValues } from "../constants";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { selectVoteCard } from "../../../features/vote";
+import { voteCardValues } from "../../../constants";
+import { Card } from "../Card";
 
 export const VoteCard = (props) => {
   const { value }: { value: number } = props;
@@ -23,12 +24,7 @@ export const VoteCard = (props) => {
   };
 
   return (
-    <Box
-      borderWidth="2px"
-      borderColor="blue.dark"
-      borderRadius="xl"
-      h="5.5rem"
-      w="3.25rem"
+    <Card
       cursor="pointer"
       transition="0.2s ease"
       _hover={
@@ -39,15 +35,13 @@ export const VoteCard = (props) => {
       onClick={() => handleVoteCardClick()}
       bg={selectedVoteCard === value ? "blue.dark" : "none"}
     >
-      <Center h="100%">
-        <Text
-          fontWeight="bold"
-          fontSize="lg"
-          color={selectedVoteCard === value ? "white" : "blue.dark"}
-        >
-          {value === voteCardValues.CONFUSED ? "?" : value}
-        </Text>
-      </Center>
-    </Box>
+      <Text
+        fontWeight="bold"
+        fontSize="lg"
+        color={selectedVoteCard === value ? "white" : "blue.dark"}
+      >
+        {value === voteCardValues.CONFUSED ? "?" : value}
+      </Text>
+    </Card>
   );
 };

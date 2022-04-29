@@ -1,6 +1,6 @@
 import { Grid, Box, Text } from "@chakra-ui/react";
 import { VoteCard } from "./VoteCard";
-import { voteCardValues } from "../constants";
+import { voteCardValues } from "../../../constants";
 
 export const VoteCards = () => {
   const sequence: number[] = [

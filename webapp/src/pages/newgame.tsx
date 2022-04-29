@@ -9,8 +9,8 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { Navbar } from "../components/Navbar";
-import { Container } from "../components/Container";
+import { Navbar } from "../components/general/Navbar";
+import { Container } from "../components/general/Container";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { localConstants, ROOM_NAME_INPUT_LIMIT } from "../constants";
 import { useAppDispatch } from "../app/hooks";

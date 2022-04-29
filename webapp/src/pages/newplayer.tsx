@@ -10,8 +10,8 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import router from "next/router";
-import { Navbar } from "../components/Navbar";
-import { Container } from "../components/Container";
+import { Navbar } from "../components/general/Navbar";
+import { Container } from "../components/general/Container";
 
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { createRoom, joinRoom } from "../features/room";

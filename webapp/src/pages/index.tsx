@@ -1,10 +1,9 @@
 import { Link as ChakraLink, Text, Button } from "@chakra-ui/react";
 import Link from "next/link";
-
-import { Hero } from "../components/Hero";
-import { Container } from "../components/Container";
-import { DarkModeSwitch } from "../components/DarkModeSwitch";
-import { Footer } from "../components/Footer";
+import { Hero } from "../components/general/Hero";
+import { Container } from "../components/general/Container";
+import { DarkModeSwitch } from "../components/general/DarkModeSwitch";
+import { Footer } from "../components/general/Footer";
 
 const Index = () => {
   return (
