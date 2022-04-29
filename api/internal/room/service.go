@@ -14,6 +14,7 @@ type Service interface {
 	GetRoomWithVotesBasedOnGameState(roomId, userId string) (*Room, error)
 	JoinRoom(roomId, username string) (*Room, *user.User, error)
 	SetVote(roomId string, vote *vote.Vote) error
+	SetGameState(roomId string, gameState GameState) error
 }
 
 type service struct {
@@ -79,6 +80,20 @@ func (s *service) SetVote(roomId string, vote *vote.Vote) error {
 	}
 
 	room.GetVotes().SetVote(vote)
+	err = s.roomRepository.SetRoom(room)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *service) SetGameState(roomId string, gameState GameState) error {
+	room, err := s.roomRepository.GetRoom(roomId)
+	if err != nil {
+		return err
+	}
+
+	room.SetGameState(gameState)
 	err = s.roomRepository.SetRoom(room)
 	if err != nil {
 		return err

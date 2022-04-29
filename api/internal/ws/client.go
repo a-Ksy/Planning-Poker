@@ -124,6 +124,8 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 	switch message.Action {
 		case VoteSubmittedAction:
 			c.handleVoteSubmittedMessage(message)
+		case CardsRevealedAction:
+			c.handleCardsRevealedMessage(message)
 	}
 }
 
@@ -167,7 +169,6 @@ func (c *Client) joinGame(gameId, userId string) {
 }
 
 func (c *Client) handleVoteSubmittedMessage(message Message) {
-	// TODO: save it to redis and broadcast private vote to all
 	value, err := strconv.Atoi(message.Message)
 	if err != nil || !vote.IsValidValue(value) {
 		return
@@ -181,4 +182,19 @@ func (c *Client) handleVoteSubmittedMessage(message Message) {
 	}
 
 	c.game.broadcast <- &message
+}
+
+func (c *Client) handleCardsRevealedMessage(message Message) {
+	votes, err := c.wsServer.revealCards(c.game.id)
+	if err != nil {
+		return
+	}
+
+	votesJson, err := json.Marshal(votes)
+	if err != nil {
+		return
+	}
+
+	revealedVotes := Message{Action: CardsRevealedAction, User: message.User, Message: string(votesJson)}
+	c.game.broadcast <- &revealedVotes
 }

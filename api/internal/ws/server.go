@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"errors"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/room"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
@@ -52,4 +53,17 @@ func (s *WSServer) findUserById(roomId, userId string) (*user.User, error) {
 
 func (s *WSServer) saveVote(roomId string, vote *vote.Vote) error {
 	return s.roomService.SetVote(roomId, vote)
+}
+
+func (s *WSServer) revealCards(roomId string) (*vote.Votes, error) {
+	r, err := s.roomService.GetRoom(roomId)
+	if err != nil {
+		return nil, err
+	}
+	if r.GetGameState() == room.CardsRevealed {
+		return nil, errors.New("cards are already revealed")
+	}
+
+	s.roomService.SetGameState(roomId, room.CardsRevealed)
+	return r.GetVotes(), nil
 }
