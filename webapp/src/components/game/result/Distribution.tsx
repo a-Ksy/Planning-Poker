@@ -1,4 +1,4 @@
-import { Box, Text, Grid, useColorMode } from "@chakra-ui/react";
+import { Box, Text, Grid, Center, useColorMode } from "@chakra-ui/react";
 import { Card } from "../Card";
 import { voteCardValues } from "../../../constants";
 import { useAppSelector } from "../../../app/hooks";
@@ -15,6 +15,9 @@ export const Distribution = () => {
 
     for (const [_, voteValue] of votesMap) {
       var val = voteValue as any;
+      if (val === voteCardValues.NOT_SELECTED) {
+        continue;
+      }
       if (val === voteCardValues.CONFUSED) {
         val = "?";
       }
@@ -32,17 +35,19 @@ export const Distribution = () => {
       <Grid templateColumns={`repeat(${voteDistribution.length}, 1fr)`} gap={3}>
         {voteDistribution.map(([vote, num]) => {
           return (
-            <Box>
-              <Card
-                h="4.5rem"
-                w="2.5rem"
-                borderColor={borderColor[colorMode]}
-                mb={2}
-              >
-                <Text fontSize="md" fontWeight="bold">
-                  {vote}
-                </Text>
-              </Card>
+            <Box alignItems="center">
+              <Center>
+                <Card
+                  h="4.5rem"
+                  w="2.5rem"
+                  borderColor={borderColor[colorMode]}
+                  mb={2}
+                >
+                  <Text fontSize="md" fontWeight="bold">
+                    {vote}
+                  </Text>
+                </Card>
+              </Center>
               <Text align="center">
                 {num} {num === 1 ? "Vote" : "Votes"}
               </Text>
