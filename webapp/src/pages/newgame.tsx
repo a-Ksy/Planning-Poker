@@ -36,7 +36,7 @@ function NewGame() {
     localStorage.setItem(localConstants.ROOM_NAME_KEY, name);
   };
 
-  const isError = name.length >= ROOM_NAME_INPUT_LIMIT;
+  const isError = name?.length >= ROOM_NAME_INPUT_LIMIT;
 
   return (
     <Box height="100vh">

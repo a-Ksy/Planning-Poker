@@ -71,7 +71,7 @@ function NewPlayer() {
     });
   };
 
-  const isError = name.length >= NAME_INPUT_LIMIT;
+  const isError = name?.length >= NAME_INPUT_LIMIT;
 
   return (
     <Box height="100vh">
