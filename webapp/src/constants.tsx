@@ -1,5 +1,5 @@
 export const BASE_URL = "https://planningpoker-server.herokuapp.com/api";
-export const BASE_WS_URL = "ws://planningpoker-server.herokuapp.com/api";
+export const BASE_WS_URL = "wss://planningpoker-server.herokuapp.com/api";
 
 export const localConstants = {
   ROOM_NAME_KEY: "roomName",
