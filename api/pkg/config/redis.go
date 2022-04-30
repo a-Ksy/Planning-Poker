@@ -1,6 +1,10 @@
 package config
 
-import "github.com/go-redis/redis/v8"
+import (
+	"os"
+
+	"github.com/go-redis/redis/v8"
+)
 
 var dbClient *redis.Client
 var pubSubClient *redis.Client
@@ -13,10 +17,12 @@ const (
 )
 
 func getRedisClient(i DBIndex) *redis.Client {
-	opt, err := redis.ParseURL("REDIS_URL")
+	opt, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+
 	if err != nil {
 		panic(err)
 	}
+
 	return redis.NewClient(opt)
 }
 
