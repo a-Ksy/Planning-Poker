@@ -11,7 +11,7 @@ import { userReducer } from "../features/user";
 import { voteReducer } from "../features/vote";
 import { historyReducer } from "../features/history";
 import { setCookies, getCookie } from "cookies-next";
-import { cookieConstants } from "../constants";
+import { cookieConstants, voteCardValues } from "../constants";
 
 const combinedReducer = combineReducers({
   history: historyReducer,
@@ -47,7 +47,7 @@ const reducer = (
       },
       vote: {
         votes: action.payload["room"]["votes"],
-        selectedVoteCard: state.vote.selectedVoteCard,
+        selectedVoteCard: voteCardValues.NOT_SELECTED,
       },
     };
   } else if (action.type === "room/getRoom/fulfilled") {
@@ -70,7 +70,7 @@ const reducer = (
         selectedVoteCard:
           previousVote !== undefined && previousVote !== null
             ? previousVote
-            : state.vote.selectedVoteCard,
+            : voteCardValues.NOT_SELECTED,
       },
     };
   } else {
