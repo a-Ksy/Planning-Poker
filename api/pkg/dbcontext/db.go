@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"encoding/json"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -23,14 +24,7 @@ type dbcontext struct {
 }
 
 func SetupDatabaseConnection() DBContext {
-	// TODO: Get addr and password from .env
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "db:6379",
-		Password: "",
-		DB:       0,
-	})
-
-	return &dbcontext{rdb: rdb}
+	return &dbcontext{rdb: config.GetDbClient()}
 }
 
 func (c *dbcontext) Set(key string, value interface{}) error {

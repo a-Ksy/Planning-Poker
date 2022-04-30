@@ -1,10 +1,14 @@
 package ws
 
+import (
+	"context"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
+)
+
 type Game struct {
 	id         string
 	clients    map[*Client]bool
 	broadcast  chan *Message
-	broadcastToOnlyOthers chan *Message
 	register   chan *Client
 	unregister chan *Client
 }
@@ -16,11 +20,11 @@ func newGame(id string) *Game {
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		broadcast:  make(chan *Message),
-		broadcastToOnlyOthers: make(chan *Message),
 	}
 }
 
 func (game *Game) runGame() {
+	go game.subscribe()
 	for {
 		select {
 		case client := <-game.register:
@@ -28,9 +32,7 @@ func (game *Game) runGame() {
 		case client := <-game.unregister:
 			game.unregisterClient(client)
 		case message := <-game.broadcast:
-			game.broadcastMessage(message)
-		case message := <-game.broadcastToOnlyOthers:
-			game.broadcastMessageToOthers(message)
+			game.publish(message.encode())
 		}
 	}
 }
@@ -45,16 +47,21 @@ func (game *Game) unregisterClient(client *Client) {
 	}
 }
 
-func (game *Game) broadcastMessage(message *Message) {
-	for client := range game.clients {
-		client.send <- message.encode()
+func (game *Game) publish(message []byte) {
+	config.GetPubSubClient().Publish(context.Background(), game.id, message)
+}
+
+func (game *Game) subscribe() {
+	pubSub := config.GetPubSubClient().Subscribe(context.Background(), game.id)
+	ch := pubSub.Channel()
+
+	for msg := range ch {
+		game.broadcastMessage([]byte(msg.Payload))
 	}
 }
 
-func (game *Game) broadcastMessageToOthers(message *Message) {
+func (game *Game) broadcastMessage(message []byte) {
 	for client := range game.clients {
-		if client.id != message.User.GetId() {
-			client.send <- message.encode()
-		}
+		client.send <- message
 	}
 }

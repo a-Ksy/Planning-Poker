@@ -167,7 +167,7 @@ func (c *Client) joinGame(gameId, userId string) {
 		game.register <- c
 
 		message := Message{Action: RoomJoinedAction, User: user}
-		c.game.broadcastToOnlyOthers <- &message
+		c.game.broadcast <- &message
 	}
 }
 
