@@ -3,14 +3,15 @@ package db
 import (
 	"context"
 	"encoding/json"
-	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
 	"time"
+
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
 
 	"github.com/go-redis/redis/v8"
 )
 
 const (
-	expirationDuration = 2 * time.Hour
+	expirationDuration = 15 * time.Minute
 )
 
 type DBContext interface {
