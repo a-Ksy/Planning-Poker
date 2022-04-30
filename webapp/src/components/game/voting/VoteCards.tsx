@@ -23,11 +23,16 @@ export const VoteCards = () => {
       <Text fontSize="lg" textAlign="center" mb={5}>
         Choose your card 👇
       </Text>
-      <Grid templateColumns={`repeat(${sequence.length}, 1fr)`} gap={5}>
-        {sequence.map((value) => {
-          return <VoteCard key={value} value={value} />;
-        })}
-      </Grid>
+      <Box
+        overflowY="auto"
+        maxWidth={{ lg: "1200px", md: "1200px", base: "500px" }}
+      >
+        <Grid templateColumns={`repeat(${sequence.length}, 1fr)`} gap="5">
+          {sequence.map((value) => {
+            return <VoteCard key={value} value={value} />;
+          })}
+        </Grid>
+      </Box>
     </Box>
   );
 };

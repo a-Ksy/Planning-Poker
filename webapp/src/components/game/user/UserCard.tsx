@@ -67,9 +67,6 @@ export const UserCard = (props) => {
     <Box>
       <Center>
         <Card
-          p={4}
-          h="5rem"
-          w="3rem"
           background={getBgBasedOnState()}
           borderWidth={getBorderWidthBasedOnState()}
           borderColor={getBorderColorBasedOnState()}

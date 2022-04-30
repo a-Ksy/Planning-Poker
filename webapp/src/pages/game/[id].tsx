@@ -27,11 +27,11 @@ function Game() {
         <Box height="100vh">
           <Navbar isGame />
           <Container h="100vh" flexDirection="column" pb={10} pt={20}>
-            <Center h="100%">
+            <Center h="100%" w="100%">
               <GameGrid />
             </Center>
             <Spacer />
-            {getBottomContentBasedOnGameState()}
+            <Center w="100%">{getBottomContentBasedOnGameState()}</Center>
           </Container>
         </Box>
       </WSWrapper>

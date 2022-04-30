@@ -37,7 +37,7 @@ export const VoteCard = (props) => {
     >
       <Text
         fontWeight="bold"
-        fontSize="lg"
+        fontSize={{ lg: "lg", base: "md" }}
         color={selectedVoteCard === value ? "white" : "blue.dark"}
       >
         {value === voteCardValues.CONFUSED ? "?" : value}

@@ -11,18 +11,24 @@ import { GameTable } from "./GameTable";
 import { useAppSelector } from "../../app/hooks";
 
 export const GameGrid = () => {
-  const { users, pending } = useAppSelector((state) => state.room);
+  const { users } = useAppSelector((state) => state.room);
 
   return (
     <Grid
-      gap="0.8rem"
+      gap="1rem"
       w="auto"
       minHeight="200px"
       m="0 auto"
       display="inline-grid"
       gridTemplateAreas={`"left top right" "left table right" "left bottom right"`}
-      gridTemplateColumns="12rem 1fr 12rem"
-      gridTemplateRows="8rem 1fr 8rem"
+      gridTemplateColumns={{
+        base: "6rem 1fr 6rem",
+        md: "8rem 1fr 8rem",
+        lg: "10rem 1fr 10rem",
+      }}
+      gridTemplateRows={{
+        lg: "8rem 1fr 8rem",
+      }}
     >
       <GridItem>
         <UserCard user={users[8]} />

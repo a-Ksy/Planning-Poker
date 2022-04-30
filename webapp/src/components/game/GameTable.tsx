@@ -38,7 +38,9 @@ export const GameTable = () => {
             borderRadius="lg"
             bg="blue.dark"
             color="white"
-            size="lg"
+            h="3rem"
+            w={{ base: "fit-content" }}
+            fontSize={{ lg: "lg", base: "md" }}
             onClick={() => handleRevealCards()}
           >
             Reveal cards
@@ -61,7 +63,9 @@ export const GameTable = () => {
           borderRadius="lg"
           bg="gray.600"
           color="white"
-          size="lg"
+          h="3rem"
+          w={{ base: "fit-content" }}
+          fontSize={{ lg: "lg", base: "md" }}
           onClick={() => {
             handleResetVoting();
           }}
@@ -75,8 +79,9 @@ export const GameTable = () => {
   return (
     <Box
       bg="blue.light"
-      w={{ base: "50vw", md: "30vw", lg: "19vw" }}
-      h="17vh"
+      w={{ base: "50vw", md: "30vw", lg: "20vw" }}
+      h={{ base: "14vh", md: "17vh", lg: "20vh" }}
+      transition="0.2s ease"
       p={4}
       borderRadius="3xl"
       alignItems="center"

@@ -27,7 +27,7 @@ export const Navbar = (props) => {
 
     return (
       <Flex position="fixed" p={5} w="100vw">
-        <Flex w="95%">
+        <Flex w={{ lg: "95%", md: "95%", base: "85%" }}>
           <Box p="3">
             <Link href="/">
               <Heading size="md" _hover={{ cursor: "pointer" }}>
