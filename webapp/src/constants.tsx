@@ -1,3 +1,4 @@
+export const BASE_WEBAPP_URL = "https://planningpokergame.herokuapp.com";
 export const BASE_URL = "https://planningpoker-server.herokuapp.com/api";
 export const BASE_WS_URL = "wss://planningpoker-server.herokuapp.com/api";
 

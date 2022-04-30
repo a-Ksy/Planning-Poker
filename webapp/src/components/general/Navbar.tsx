@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DarkModeSwitch } from "./DarkModeSwitch";
 import { CopyIcon } from "@chakra-ui/icons";
 import { useAppSelector } from "../../app/hooks";
-import { BASE_URL } from "../../constants";
+import { BASE_WEBAPP_URL } from "../../constants";
 
 export const Navbar = (props) => {
   const { isGame } = props;
@@ -13,7 +13,7 @@ export const Navbar = (props) => {
     const toast = useToast();
 
     const handleCopyInvitation = () => {
-      navigator.clipboard.writeText(`${BASE_URL}/game/${id}`);
+      navigator.clipboard.writeText(`${BASE_WEBAPP_URL}/game/${id}`);
       return toast({
         position: "top",
         title: "Invitation link copied to clipboard!",
