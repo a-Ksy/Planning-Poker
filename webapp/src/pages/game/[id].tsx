@@ -25,7 +25,7 @@ function Game() {
       <WSWrapper>
         <UserPersistency />
         <Box height="100vh">
-          <Navbar />
+          <Navbar isGame />
           <Container h="100vh" flexDirection="column" pb={10} pt={20}>
             <Center h="100%">
               <GameGrid />
