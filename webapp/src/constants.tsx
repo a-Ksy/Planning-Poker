@@ -1,6 +1,17 @@
-export const BASE_WEBAPP_URL = "https://planningpokergame.herokuapp.com";
-export const BASE_URL = "https://planningpoker-server.herokuapp.com/api";
-export const BASE_WS_URL = "wss://planningpoker-server.herokuapp.com/api";
+const env = process.env.NODE_ENV;
+
+export const BASE_WEBAPP_URL =
+  env === "production"
+    ? "https://planningpokergame.herokuapp.com"
+    : "http://localhost:3000";
+export const BASE_URL =
+  env === "production"
+    ? "https://planningpoker-server.herokuapp.com/api"
+    : "http://localhost:8080/api";
+export const BASE_WS_URL =
+  env === "production"
+    ? "wss://planningpoker-server.herokuapp.com/api"
+    : "ws://localhost:8080/api";
 
 export const localConstants = {
   ROOM_NAME_KEY: "roomName",
