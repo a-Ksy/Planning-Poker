@@ -9,16 +9,15 @@ type DBIndex int
 
 const (
 	database DBIndex = 0
-	pubSub DBIndex = 1
+	pubSub   DBIndex = 1
 )
 
 func getRedisClient(i DBIndex) *redis.Client {
-	client := redis.NewClient(&redis.Options{
-			Addr:     "db:6379",
-			Password: "",
-			DB:       int(i),
-		})
-	return client
+	opt, err := redis.ParseURL("REDIS_URL")
+	if err != nil {
+		panic(err)
+	}
+	return redis.NewClient(opt)
 }
 
 func GetDbClient() *redis.Client {
