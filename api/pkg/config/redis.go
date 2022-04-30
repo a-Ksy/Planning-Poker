@@ -17,13 +17,26 @@ const (
 )
 
 func getRedisClient(i DBIndex) *redis.Client {
-	opt, err := redis.ParseURL(os.Getenv("REDIS_URL"))
 
-	if err != nil {
-		panic(err)
+	var client *redis.Client
+
+	appEnv := os.Getenv("APP_ENV")
+
+	if appEnv == "dev" {
+		client = redis.NewClient(&redis.Options{
+			Addr:     "db:6379",
+			Password: "",
+			DB:       int(i),
+		})
+	} else {
+		opt, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+		if err != nil {
+			panic(err)
+		}
+		opt.DB = int(i)
+		redis.NewClient(opt)
 	}
-
-	return redis.NewClient(opt)
+	return client
 }
 
 func GetDbClient() *redis.Client {
