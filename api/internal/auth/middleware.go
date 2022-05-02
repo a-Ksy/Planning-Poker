@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -11,8 +12,7 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// TODO: Put the secret into .env file
-var jwtKey = []byte("my_secret_key")
+var jwtKey = []byte(os.Getenv("JWT_KEY"))
 
 func GenerateToken(user *user.User, roomId string, isAdmin bool) (Token, error) {
 	expirationTime := time.Now().Add(4 * time.Hour)
