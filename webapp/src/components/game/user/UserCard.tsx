@@ -78,7 +78,9 @@ export const UserCard = (props) => {
               fontWeight="bold"
               fontSize="lg"
             >
-              {votes[user.id]}
+              {votes[user.id] === voteCardValues.CONFUSED
+                ? "?"
+                : votes[user.id]}
             </Text>
           )}
         </Card>
