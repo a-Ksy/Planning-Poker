@@ -14,6 +14,8 @@ type GameState string
 const (
 	InProgress GameState = "IN_PROGRESS"
 	CardsRevealed GameState = "CARDS_REVEALED"
+
+	maxUsers int = 12
 )
 
 type Room struct {
@@ -53,6 +55,10 @@ func (r *Room) GetName() string {
 
 func (r *Room) AddUser(user *user.User) {
 	r.users = append(r.users, *user)
+}
+
+func (r *Room) IsFull() bool {
+	return len(r.users) >= maxUsers
 }
 
 func (r *Room) GetUserWithId(userId string) (*user.User, error) {
