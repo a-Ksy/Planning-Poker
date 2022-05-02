@@ -3,9 +3,8 @@ package room
 import (
 	"errors"
 	"fmt"
-	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
-
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 )
 
@@ -52,6 +51,10 @@ func (s *service) GetRoomWithVotesBasedOnGameState(roomId, userId string) (*Room
 		return nil, err
 	}
 
+	if err != nil {
+		return nil, err
+	}
+
 	if room.gameState == InProgress {
 		room.GetVotes().HideVotesExceptUserId(userId)
 	}
@@ -60,7 +63,7 @@ func (s *service) GetRoomWithVotesBasedOnGameState(roomId, userId string) (*Room
 }
 
 func (s *service) JoinRoom(roomId, username string) (*Room, *user.User, error) {
-	room, err := s.GetRoomWithVotesBasedOnGameState(roomId, "")
+	room, err := s.GetRoom(roomId)
 	if err != nil {
 		s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return nil, nil, err
@@ -75,6 +78,12 @@ func (s *service) JoinRoom(roomId, username string) (*Room, *user.User, error) {
 	user := user.NewUser(username)
 	room.AddUser(user)
 	if err := s.roomRepository.SetRoom(room); err != nil {
+		return nil, nil, err
+	}
+
+	room, err = s.GetRoomWithVotesBasedOnGameState(roomId, "")
+	if err != nil {
+		s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return nil, nil, err
 	}
 

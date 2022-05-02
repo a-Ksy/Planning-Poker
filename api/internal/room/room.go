@@ -105,5 +105,5 @@ func (r *Room) ResetVotes() {
 }
 
 func (r *Room) String() string {
-	return fmt.Sprintln("Id:", r.id, "Name:", r.name, "Users:", r.users, "Admin:", r.admin)
+	return fmt.Sprintln("Id:", r.id, "Name:", r.name, "Users:", r.users, "Admin:", r.admin, "Votes:", r.votes, "State:", r.gameState)
 }
