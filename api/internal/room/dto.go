@@ -16,8 +16,8 @@ type RoomDto struct {
 }
 
 type RoomCreation struct {
-	RoomName string `json:"roomName" validate:"required"`
-	Username string `json:"username" validate:"required"`
+	RoomName string `json:"roomName" validate:"required,min=1,max=30"`
+	Username string `json:"username" validate:"required,min=1,max=12"`
 }
 
 type CreatedRoomWithUser struct {
@@ -27,5 +27,5 @@ type CreatedRoomWithUser struct {
 
 type JoinRoom struct {
 	RoomId   string `json:"roomId" validate:"required"`
-	Username string `json:"username" validate:"required"`
+	Username string `json:"username" validate:"required,min=1,max=12"`
 }
