@@ -67,7 +67,7 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 
 func (c *controller) GetRoom(ctx *gin.Context) {
 	roomId := ctx.Param("id")
-	c.logger.Info(fmt.Sprintln("GetRoomBasedOnGameState called with roomId:", roomId))
+	c.logger.Info(fmt.Sprintln("GetRoom called with roomId:", roomId))
 
 	if roomId == "" {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, "'roomId' should be provided")
