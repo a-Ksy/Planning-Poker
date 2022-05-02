@@ -1,6 +1,7 @@
 package room
 
 import (
+	"errors"
 	"fmt"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 
@@ -63,6 +64,12 @@ func (s *service) JoinRoom(roomId, username string) (*Room, *user.User, error) {
 	if err != nil {
 		s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "not found."))
 		return nil, nil, err
+	}
+
+	if room.IsFull() {
+		s.logger.Info(fmt.Sprintln("Room with roomId:", roomId, "is full."))
+		return nil, nil, errors.New(fmt.Sprintln("couldn't join the room with roomId:", roomId, "as it's full."))
+
 	}
 
 	user := user.NewUser(username)
