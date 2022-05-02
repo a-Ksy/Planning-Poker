@@ -34,7 +34,7 @@ func getRedisClient(i DBIndex) *redis.Client {
 			panic(err)
 		}
 		opt.DB = int(i)
-		redis.NewClient(opt)
+		client = redis.NewClient(opt)
 	}
 	return client
 }
