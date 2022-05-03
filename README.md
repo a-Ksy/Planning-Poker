@@ -6,7 +6,11 @@ Planning Poker 🎲
   <strong>Plan your next Sprint by voting on tasks!</strong>
 </p>
 
-> Work In Progress 👷
+## What it looks like?
+
+![Voting Session](https://user-images.githubusercontent.com/62121154/166455320-ff1159d0-7369-4c7b-9f06-0e6d8c557988.png)
+![Cards Revealed](https://user-images.githubusercontent.com/62121154/166455328-ec64189f-641e-4be0-815c-e704ab1b753e.png)
+
 ## Structure
 
 | Codebase         |                          Description                          |
