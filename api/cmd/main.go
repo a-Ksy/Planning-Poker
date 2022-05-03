@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"net/http"
+	"os"
 )
 
 var (
@@ -24,7 +25,16 @@ func main() {
 	defer database.Close()
 
 	r := gin.Default()
-	r.Use(cors.AllowAll())
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{os.Getenv("CLIENT_URL")},
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+		},
+		AllowedHeaders:   []string{"*"},
+	})
+	r.Use(c)
 
 	roomRoutes := r.Group("api/room")
 	{
