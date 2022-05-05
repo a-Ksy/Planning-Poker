@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	expirationDuration = 15 * time.Minute
+	expirationDuration = 30 * time.Minute
 )
 
 type DBContext interface {
