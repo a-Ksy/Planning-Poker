@@ -31,6 +31,8 @@ function getStoredUsername(): string {
 function NewPlayer() {
   const dispatch = useAppDispatch();
   const { page, id } = useAppSelector((state) => state.history);
+  const { pending } = useAppSelector((state) => state.room);
+
   useEffect(() => {
     if (page === "Landing") {
       router.push("/");
@@ -106,6 +108,8 @@ function NewPlayer() {
                 )}
               </FormControl>
               <Button
+                isLoading={pending}
+                loadingText="Preparing the room"
                 type="submit"
                 width="full"
                 colorScheme="green"
