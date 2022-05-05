@@ -51,7 +51,11 @@ export const UserCard = (props) => {
         return borderColor[colorMode];
       }
     } else if (gameState === gameStates.CARDS_REVEALED) {
-      return "blue.dark";
+      if (hasUserVoted()) {
+        return "blue.dark";
+      }
+
+      return "gray.400";
     }
   };
 
@@ -63,6 +67,17 @@ export const UserCard = (props) => {
     }
   };
 
+  const getVote = () => {
+    if (!hasUserVoted()) {
+      return "";
+    }
+
+    if (votes[user.id] === voteCardValues.CONFUSED) {
+      return "?";
+    }
+
+    return votes[user.id];
+  };
   return (
     <Box>
       <Center>
@@ -71,16 +86,14 @@ export const UserCard = (props) => {
           borderWidth={getBorderWidthBasedOnState()}
           borderColor={getBorderColorBasedOnState()}
         >
-          {gameState === gameStates.CARDS_REVEALED && hasUserVoted() && (
+          {gameState === gameStates.CARDS_REVEALED && (
             <Text
               textAlign="center"
               color="blue.dark"
               fontWeight="bold"
               fontSize="lg"
             >
-              {votes[user.id] === voteCardValues.CONFUSED
-                ? "?"
-                : votes[user.id]}
+              {getVote()}
             </Text>
           )}
         </Card>
