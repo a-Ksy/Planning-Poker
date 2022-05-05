@@ -23,3 +23,5 @@ TODO
 # IDE stuff
 .idea
 .vscode/
+
+.DS_Store
