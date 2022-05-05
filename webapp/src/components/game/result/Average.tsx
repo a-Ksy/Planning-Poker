@@ -16,7 +16,8 @@ export const Average = () => {
     for (const [_, voteValue] of votesMap) {
       if (
         voteValue === voteCardValues.CONFUSED ||
-        voteValue === voteCardValues.NOT_SELECTED
+        voteValue === voteCardValues.NOT_SELECTED ||
+        voteValue === voteCardValues.PRIVATE
       ) {
         continue;
       }
@@ -35,7 +36,7 @@ export const Average = () => {
 
   const average = getAverage();
 
-  if (!average) {
+  if (average === null) {
     return null;
   }
 
