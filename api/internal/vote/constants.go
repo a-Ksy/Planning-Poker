@@ -23,13 +23,3 @@ var voteValues = map[int]bool{
 	55: true,
 	89: true,
 }
-
-func IsValidValue(value int) bool {
-	_, ok := voteValues[value]
-	return ok
-}
-
-func IsValueAccountable(value int) bool {
-	isAccountable, _ := voteValues[value]
-	return isAccountable
-}
