@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
-
 	"github.com/go-redis/redis/v8"
 )
 
@@ -24,8 +22,8 @@ type dbcontext struct {
 	rdb *redis.Client
 }
 
-func SetupDatabaseConnection() DBContext {
-	return &dbcontext{rdb: config.GetDbClient()}
+func SetupDatabaseConnection(rdb *redis.Client) DBContext {
+	return &dbcontext{rdb: rdb}
 }
 
 func (c *dbcontext) Set(key string, value interface{}) error {

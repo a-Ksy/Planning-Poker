@@ -4,6 +4,7 @@ import (
 	"github.com/a-Ksy/Planning-Poker/backend/internal/auth"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/room"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/ws"
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
 	db "github.com/a-Ksy/Planning-Poker/backend/pkg/dbcontext"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/log"
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ import (
 
 var (
 	logger         = log.New()
-	database       = db.SetupDatabaseConnection()
+	database       = db.SetupDatabaseConnection(config.GetDbClient())
 	roomRepository = room.NewRoomRepository(database, logger)
 	roomService    = room.NewRoomService(roomRepository, logger)
 	roomController = room.NewRoomController(roomService, logger)
