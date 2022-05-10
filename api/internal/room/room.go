@@ -70,16 +70,6 @@ func (r *Room) GetUserWithId(userId string) (*user.User, error) {
 	return nil, errors.New("couldn't find user with given id")
 }
 
-func (r *Room) RemoveUserWithId(userId string) bool {
-	for i, u := range r.users {
-		if u.GetId() == userId {
-			r.users = append(r.users[:i], r.users[i+1:]...)
-			return true
-		}
-	}
-	return false
-}
-
 func (r *Room) GetAdmin() *user.User {
 	return r.admin
 }
