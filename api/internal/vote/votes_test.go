@@ -41,7 +41,7 @@ func TestGetVote(t *testing.T) {
 
 	val, err := votes.GetVote(dummyId1)
 	assert.NoError(t, err)
-	assert.Equal(t, val, 13)
+	assert.Equal(t, 13, val)
 }
 
 func TestHideVotesExceptUserId(t *testing.T) {
@@ -50,5 +50,5 @@ func TestHideVotesExceptUserId(t *testing.T) {
 	userId := dummyId3
 	expected := Votes{dummyId1: Private, dummyId2: Private, dummyId3: 2}
 	votes.HideVotesExceptUserId(userId)
-	assert.Equal(t, votes, expected)
+	assert.Equal(t, expected, votes)
 }
