@@ -7,15 +7,6 @@ import (
 	"testing"
 )
 
-const (
-	dummyId = "123"
-	dummyIdDoesNotExist = "DOES_NOT_EXIST"
-	dummyName = "my-sprint-planning"
-	dummyVote = 55
-)
-
-var dummyUser = user.NewUser("Michael")
-
 func TestNewRoom(t *testing.T) {
 	result := NewRoom(dummyName)
 	expected := &Room{
@@ -43,7 +34,7 @@ func TestNewRoomWithAdmin(t *testing.T) {
 }
 
 func TestGetId(t *testing.T) {
-	room := Room{id: dummyId}
+	room := Room{id: mockRoomId}
 	assert.Equal(t, room.id, room.GetId())
 }
 
@@ -112,14 +103,14 @@ func TestSetGameState(t *testing.T) {
 
 func TestResetVotes(t *testing.T) {
 	room := &Room{votes: vote.NewVotes()}
-	room.votes[dummyId] = dummyVote
+	room.votes[mockRoomId] = dummyVote
 	room.ResetVotes()
 	assert.Empty(t, room.votes)
 }
 
 func TestString(t *testing.T) {
 	room := &Room{
-		id:        dummyId,
+		id:        mockRoomId,
 		name:      dummyName,
 		users:     []user.User{},
 		admin:     nil,
