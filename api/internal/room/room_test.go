@@ -4,7 +4,6 @@ import (
 	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 	"github.com/stretchr/testify/assert"
-	"os"
 	"testing"
 )
 
@@ -15,13 +14,7 @@ const (
 	dummyVote = 55
 )
 
-var dummyUser *user.User
-
-func TestMain(m *testing.M) {
-	dummyUser = user.NewUser("Michael")
-	code := m.Run()
-	os.Exit(code)
-}
+var dummyUser = user.NewUser("Michael")
 
 func TestNewRoom(t *testing.T) {
 	result := NewRoom(dummyName)
