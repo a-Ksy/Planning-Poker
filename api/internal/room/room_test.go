@@ -8,10 +8,10 @@ import (
 )
 
 func TestNewRoom(t *testing.T) {
-	result := NewRoom(dummyName)
+	result := NewRoom(mockRoomName)
 	expected := &Room{
 		id:        result.id,
-		name:      dummyName,
+		name:      mockRoomName,
 		users:     []user.User{},
 		admin:     nil,
 		votes:     vote.NewVotes(),
@@ -21,12 +21,12 @@ func TestNewRoom(t *testing.T) {
 }
 
 func TestNewRoomWithAdmin(t *testing.T) {
-	result := NewRoomWithAdmin(dummyName, dummyUser)
+	result := NewRoomWithAdmin(mockRoomName, mockUser1)
 	expected := &Room{
 		id:        result.id,
-		name:      dummyName,
-		users:     []user.User{*dummyUser},
-		admin:     dummyUser,
+		name:      mockRoomName,
+		users:     []user.User{*mockUser1},
+		admin:     mockUser1,
 		votes:     vote.NewVotes(),
 		gameState: InProgress,
 	}
@@ -39,14 +39,14 @@ func TestGetId(t *testing.T) {
 }
 
 func TestGetName(t *testing.T) {
-	room := Room{name: dummyName}
+	room := Room{name: mockRoomName}
 	assert.Equal(t, room.name, room.GetName())
 }
 
 func TestAddUser(t *testing.T) {
-	expected := Room{users: []user.User{*dummyUser}}
+	expected := Room{users: []user.User{*mockUser1}}
 	room := Room{}
-	room.AddUser(dummyUser)
+	room.AddUser(mockUser1)
 	assert.Equal(t, expected, room)
 }
 
@@ -54,33 +54,33 @@ func TestIsFull(t *testing.T) {
 	room := Room{}
 	for i := 0 ; i < maxUsers; i++ {
 		assert.False(t, room.IsFull())
-		room.users = append(room.users, *dummyUser)
+		room.users = append(room.users, *mockUser1)
 	}
-	room.users = append(room.users, *dummyUser)
+	room.users = append(room.users, *mockUser1)
 	assert.True(t, room.IsFull())
 }
 
 func TestGetUserWithId(t *testing.T) {
-	room := &Room{users: []user.User{*dummyUser}}
+	room := &Room{users: []user.User{*mockUser1}}
 
 	user, err := room.GetUserWithId(dummyIdDoesNotExist)
 	assert.Error(t, err)
 	assert.Nil(t, user)
 
-	user, err = room.GetUserWithId(dummyUser.GetId())
+	user, err = room.GetUserWithId(mockUser1.GetId())
 	assert.NoError(t, err)
-	assert.Equal(t, dummyUser, user)
+	assert.Equal(t, mockUser1, user)
 }
 
 func TestGetAdmin(t *testing.T) {
-	room := &Room{admin: dummyUser}
-	assert.Equal(t, dummyUser, room.GetAdmin())
+	room := &Room{admin: mockUser1}
+	assert.Equal(t, mockUser1, room.GetAdmin())
 }
 
 func TestSetAdmin(t *testing.T) {
 	room := &Room{}
-	room.SetAdmin(dummyUser)
-	assert.Equal(t, dummyUser, room.admin)
+	room.SetAdmin(mockUser1)
+	assert.Equal(t, mockUser1, room.admin)
 }
 
 func TestGetVotes(t *testing.T) {
@@ -103,7 +103,7 @@ func TestSetGameState(t *testing.T) {
 
 func TestResetVotes(t *testing.T) {
 	room := &Room{votes: vote.NewVotes()}
-	room.votes[mockRoomId] = dummyVote
+	room.votes[mockRoomId] = mockVoteValue1
 	room.ResetVotes()
 	assert.Empty(t, room.votes)
 }
@@ -111,13 +111,13 @@ func TestResetVotes(t *testing.T) {
 func TestString(t *testing.T) {
 	room := &Room{
 		id:        mockRoomId,
-		name:      dummyName,
+		name:      mockRoomName,
 		users:     []user.User{},
 		admin:     nil,
 		votes:     vote.NewVotes(),
 		gameState: InProgress,
 	}
 	result := room.String()
-	expected := "Id: 123 Name: my-sprint-planning Users: [] Admin: <nil> Votes: map[] State: IN_PROGRESS\n"
+	expected := "Id: 1 Name: sprint-planning Users: [] Admin: <nil> Votes: map[] State: IN_PROGRESS\n"
 	assert.Equal(t, expected, result)
 }

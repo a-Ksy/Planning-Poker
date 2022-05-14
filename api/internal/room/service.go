@@ -51,10 +51,6 @@ func (s *service) GetRoomWithVotesBasedOnGameState(roomId, userId string) (*Room
 		return nil, err
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
 	if room.gameState == InProgress {
 		room.GetVotes().HideVotesExceptUserId(userId)
 	}

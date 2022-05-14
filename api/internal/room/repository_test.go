@@ -15,17 +15,17 @@ func TestNewRoomRepository(t *testing.T) {
 	assert.Equal(t, expected, result)
 }
 
-func TestCreateRoom(t *testing.T) {
+func TestRepository_CreateRoom(t *testing.T) {
 	existingRoom := mockRoom
 	err := mockRepository.CreateRoom(existingRoom)
 	assert.Error(t, err)
 
-	room := NewRoom(dummyName)
+	room := NewRoom(mockRoomName)
 	err = mockRepository.CreateRoom(room)
 	assert.NoError(t, err)
 }
 
-func TestGetRoom(t *testing.T) {
+func TestRepository_GetRoom(t *testing.T) {
 	nonExistingRoom := NewRoom("DOESN'T EXIST")
 	room, err := mockRepository.GetRoom(nonExistingRoom.GetId())
 	assert.Error(t, err)
