@@ -6,6 +6,16 @@ import (
 	"testing"
 )
 
+func TestNewRoomService(t *testing.T) {
+	expected := &service{
+		roomRepository: mockRepository,
+		logger:         mockLogger,
+	}
+
+	actual := NewRoomService(mockRepository, mockLogger)
+	assert.Equal(t, expected, actual)
+}
+
 func TestCreateRoom(t *testing.T) {
 	room, err := mockService.CreateRoom(mockRoomName, mockUsername1)
 	assert.NoError(t, err)
