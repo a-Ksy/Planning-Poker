@@ -6,6 +6,8 @@ import (
 )
 
 func TestNewRoomRepository(t *testing.T) {
+	setupUnitTest()
+
 	expected := &repository{
 		db:     mockDb,
 		logger: mockLogger,
@@ -16,6 +18,8 @@ func TestNewRoomRepository(t *testing.T) {
 }
 
 func TestRepository_CreateRoom(t *testing.T) {
+	setupUnitTest()
+
 	existingRoom := mockRoom
 	err := mockRepository.CreateRoom(existingRoom)
 	assert.Error(t, err)
@@ -26,6 +30,8 @@ func TestRepository_CreateRoom(t *testing.T) {
 }
 
 func TestRepository_GetRoom(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom("DOESN'T EXIST")
 	room, err := mockRepository.GetRoom(nonExistingRoom.GetId())
 	assert.Error(t, err)
@@ -38,6 +44,8 @@ func TestRepository_GetRoom(t *testing.T) {
 }
 
 func TestSetRoom(t *testing.T) {
+	setupUnitTest()
+
 	err := mockRepository.SetRoom(mockRoom)
 	assert.NoError(t, err)
 }

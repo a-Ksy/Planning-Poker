@@ -7,6 +7,8 @@ import (
 )
 
 func TestNewRoomService(t *testing.T) {
+	setupUnitTest()
+
 	expected := &service{
 		roomRepository: mockRepository,
 		logger:         mockLogger,
@@ -17,6 +19,8 @@ func TestNewRoomService(t *testing.T) {
 }
 
 func TestCreateRoom(t *testing.T) {
+	setupUnitTest()
+
 	room, err := mockService.CreateRoom(mockRoomName, mockUsername1)
 	assert.NoError(t, err)
 	assert.Equal(t, mockRoomName, room.GetName())
@@ -24,6 +28,8 @@ func TestCreateRoom(t *testing.T) {
 }
 
 func TestGetRoom(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom("DOESN'T EXIST")
 	room, err := mockService.GetRoom(nonExistingRoom.GetId())
 	assert.Error(t, err)
@@ -35,6 +41,8 @@ func TestGetRoom(t *testing.T) {
 }
 
 func TestGetRoomWithVotesBasedOnGameState(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom(mockRoomName)
 	room, err := mockService.GetRoomWithVotesBasedOnGameState(nonExistingRoom.GetId(), "12345")
 	assert.Error(t, err)
@@ -53,6 +61,8 @@ func TestGetRoomWithVotesBasedOnGameState(t *testing.T) {
 }
 
 func TestJoinRoom(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom(mockRoomName)
 	room, user, err := mockService.JoinRoom(nonExistingRoom.GetId(), mockUsername1)
 	assert.Error(t, err)
@@ -70,6 +80,8 @@ func TestJoinRoom(t *testing.T) {
 }
 
 func TestSetVote(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom(mockRoomName)
 	err := mockService.SetVote(nonExistingRoom.GetId(), vote.NewVote(mockUser1.GetId(), mockVoteValue1))
 	assert.Error(t, err)
@@ -86,6 +98,8 @@ func TestSetVote(t *testing.T) {
 }
 
 func TestService_SetGameState(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom(mockRoomName)
 	err := mockService.SetVote(nonExistingRoom.GetId(), vote.NewVote(mockUser1.GetId(), mockVoteValue1))
 	assert.Error(t, err)
@@ -101,6 +115,8 @@ func TestService_SetGameState(t *testing.T) {
 }
 
 func TestResetVotingSession(t *testing.T) {
+	setupUnitTest()
+
 	nonExistingRoom := NewRoom(mockRoomName)
 	err := mockService.SetVote(nonExistingRoom.GetId(), vote.NewVote(mockUser1.GetId(), mockVoteValue1))
 	assert.Error(t, err)

@@ -36,7 +36,7 @@ func (c *controller) CreateRoom(ctx *gin.Context) {
 
 	err := validate.Struct(roomCreation)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, "'roomName' or 'username' field is either not provided or valid.")
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, "'roomName' or 'username' field is either not provided or not valid.")
 		return
 	}
 	c.logger.Info(fmt.Sprintln("CreateRoom called with roomName:", roomCreation.RoomName, "and admin username:", roomCreation.Username))
