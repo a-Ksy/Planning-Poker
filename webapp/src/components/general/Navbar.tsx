@@ -39,6 +39,8 @@ export const Navbar = (props) => {
           <Button
             leftIcon={<CopyIcon />}
             onClick={() => handleCopyInvitation()}
+            mr="3rem"
+            mt={1}
           >
             Copy Invitation
           </Button>
