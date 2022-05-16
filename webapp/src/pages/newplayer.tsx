@@ -61,6 +61,11 @@ function NewPlayer() {
   const handleCreateRoom = () => {
     const roomName: string = localStorage.getItem(localConstants.ROOM_NAME_KEY);
     dispatch(createRoom({ roomName, username: name })).then((data) => {
+      if (data.type === "room/createRoom/rejected") {
+        router.push(`/oops`);
+        return;
+      }
+
       const roomId: string = data.payload["room"]["id"];
       router.push(`/game/${roomId}`);
     });
@@ -68,6 +73,11 @@ function NewPlayer() {
 
   const handleJoinRoom = () => {
     dispatch(joinRoom({ roomId: id, username: name })).then((data) => {
+      if (data.type === "room/joinRoom/rejected") {
+        router.push(`/oops`);
+        return;
+      }
+
       const roomId: string = data.payload["room"]["id"];
       router.push(`/game/${roomId}`);
     });

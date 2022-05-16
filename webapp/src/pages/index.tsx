@@ -7,16 +7,15 @@ import { Footer } from "../components/general/Footer";
 
 const Index = () => {
   return (
-    <Container height="100vh">
+    <Container height="100vh" justifyContent="center">
       <DarkModeSwitch />
-      <Hero />
-      <Container justifyContent="center" py={2}>
+      <Hero>
         <Link href="/newgame">
           <Button variant="solid" colorScheme="red" size="lg">
             Start new game
           </Button>
         </Link>
-      </Container>
+      </Hero>
       <Footer>
         <ChakraLink isExternal href="https://github.com/a-Ksy/Planning-Poker">
           <Text>Source Code ⚡</Text>

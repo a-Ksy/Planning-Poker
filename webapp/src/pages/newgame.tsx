@@ -71,7 +71,7 @@ function NewGame() {
                 <Button
                   type="submit"
                   width="full"
-                  colorScheme="red"
+                  colorScheme="yellow"
                   isDisabled={name === "" || isError}
                   rightIcon={<ArrowForwardIcon />}
                   onClick={() => handleNewGame()}
