@@ -15,10 +15,10 @@ Planning Poker 🎲
 
 ### Structure
 
-| Codebase         |                          Description                          |
-| :--------------- | :-----------------------------------------------------------: |
-| [api](api)       | API written with **Go**, uses **Redis** as in-memory database |
-| [webapp](webapp) |               **Nextjs** *Typescript* frontend                |
+| Codebase         |                          Description                                       |
+| :--------------- | :------------------------------------------------------------------------: |
+| [api](api)       | API written with **Go**, uses **Redis** as in-memory database, and pub/sub |
+| [webapp](webapp) |               **Nextjs** *Typescript* frontend                             |
 
 ### System Diagram
 
