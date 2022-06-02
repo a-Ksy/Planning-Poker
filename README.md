@@ -20,6 +20,10 @@ Planning Poker 🎲
 | [api](api)       | API written with **Go**, uses **Redis** as in-memory database |
 | [webapp](webapp) |               **Nextjs** *Typescript* frontend                |
 
+### System Diagram
+
+![diagram](https://user-images.githubusercontent.com/62121154/171638575-a2ffe342-b2be-4405-8dbd-33e1caea4271.png)
+
 ### Development
 
 To run the API and Redis, we first have to build the necessary dependencies:
