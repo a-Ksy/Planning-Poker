@@ -3,6 +3,11 @@ package ws
 import (
 	"context"
 	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
+	"time"
+)
+
+const (
+	maxAFKDuration = 60 * time.Second
 )
 
 type Game struct {
@@ -11,6 +16,7 @@ type Game struct {
 	broadcast  chan *Message
 	register   chan *Client
 	unregister chan *Client
+	AFK chan *Client
 }
 
 func newGame(id string) *Game {
@@ -25,12 +31,16 @@ func newGame(id string) *Game {
 
 func (game *Game) runGame() {
 	go game.subscribe()
+	go game.disconnectAFKs()
+
 	for {
 		select {
 		case client := <-game.register:
 			game.registerClient(client)
 		case client := <-game.unregister:
 			game.unregisterClient(client)
+		case client := <- game.AFK:
+			game.setClientAFK(client)
 		case message := <-game.broadcast:
 			game.publish(message.encode())
 		}
@@ -47,6 +57,10 @@ func (game *Game) unregisterClient(client *Client) {
 	}
 }
 
+func (game *Game) setClientAFK(client *Client) {
+	game.clients[client] = false
+}
+
 func (game *Game) publish(message []byte) {
 	config.GetPubSubClient().Publish(context.Background(), game.id, message)
 }
@@ -61,7 +75,19 @@ func (game *Game) subscribe() {
 }
 
 func (game *Game) broadcastMessage(message []byte) {
-	for client := range game.clients {
-		client.send <- message
+	for client, isOnline := range game.clients {
+		if isOnline {
+			client.send <- message
+		}
 	}
+}
+
+func (game *Game) disconnectAFKs() {
+	for client, isOnline := range game.clients {
+		if !isOnline {
+			client.disconnect()
+			// todo: remove from game
+		}
+	}
+	time.Sleep(maxAFKDuration)
 }

@@ -45,3 +45,7 @@ export const revealCards = createAction<boolean>("room/revealCards");
 export const resetVoting = createAction<boolean>("room/resetVoting");
 
 export const setGameState = createAction<string>("room/setGameState");
+
+export const setAFK = createAction<User>("room/setAFK");
+
+export const setOnline = createAction<User>("room/setOnline");

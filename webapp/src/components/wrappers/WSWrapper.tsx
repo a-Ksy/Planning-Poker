@@ -6,6 +6,8 @@ import {
   revealCards,
   resetVoting,
   setGameState,
+  setAFK,
+  setOnline,
 } from "../../features/room";
 import {
   Vote,
@@ -69,6 +71,7 @@ export const WSWrapper = (props) => {
       switch (message?.action) {
         case messages.ROOM_JOINED:
           dispatch(roomJoined(message.user));
+          dispatch(setOnline(message.user));
           break;
         case messages.VOTE_SUBMITTED:
           const vote: Vote = new Vote();
@@ -88,6 +91,9 @@ export const WSWrapper = (props) => {
           dispatch(resetVoting(false));
           dispatch(setVotes(new Object()));
           dispatch(selectVoteCard(voteCardValues.EMPTY));
+          break;
+        case messages.IS_AFK:
+          dispatch(setAFK(message.user));
           break;
       }
     };

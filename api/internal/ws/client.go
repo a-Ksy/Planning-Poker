@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 	"log"
 	"net/http"
@@ -92,7 +91,7 @@ func (c *Client) writePump() {
 
 func (c *Client) readPump() {
 	defer func() {
-		c.disconnect()
+		c.setAsAFK()
 	}()
 
 	c.conn.SetReadLimit(maxMessageSize)
@@ -120,7 +119,7 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 		return
 	}
 
-	fmt.Println(message)
+	log.Println("Message:", message)
 	switch message.Action {
 		case VoteSubmittedAction:
 			c.handleVoteSubmittedMessage(message)
@@ -134,6 +133,13 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 
 func (c *Client) disconnect() {
 	c.game.unregister <- c
+	close(c.send)
+	c.conn.Close()
+}
+
+func (c *Client) setAsAFK() {
+	c.sendClientIsAFKMessage()
+	c.game.AFK <- c
 	close(c.send)
 	c.conn.Close()
 }
@@ -209,5 +215,20 @@ func (c *Client) handleStartNewVotingMessage(message Message) {
 	}
 
 	message.Action = NewVotingStartedAction
+	c.game.broadcast <- &message
+}
+
+func (c *Client) sendClientIsAFKMessage() {
+	game := c.wsServer.findGameById(c.game.id)
+	if game == nil {
+		return
+	}
+
+	user, err := c.wsServer.findUserById(game.id, c.id)
+	if err != nil {
+		return
+	}
+
+	message := Message{Action: IsAFKAction, User: user}
 	c.game.broadcast <- &message
 }
