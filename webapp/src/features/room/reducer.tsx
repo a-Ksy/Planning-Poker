@@ -8,8 +8,6 @@ import {
   roomJoined,
   resetVoting,
   setGameState,
-  setAFK,
-  setOnline,
 } from "./actions";
 import { gameStates } from "../../constants";
 
@@ -90,25 +88,5 @@ export const roomReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setGameState, (state, { payload }) => {
       state.gameState = payload;
-    })
-    .addCase(setAFK, (state, { payload }) => {
-      const users: User[] = state.users;
-      for (const user of users) {
-        if (user.id == payload.id) {
-          user.isAFK = true;
-          break;
-        }
-      }
-      state.users = users;
-    })
-    .addCase(setOnline, (state, { payload }) => {
-      const users: User[] = state.users;
-      for (const user of users) {
-        if (user.id == payload.id) {
-          user.isAFK = false;
-          break;
-        }
-      }
-      state.users = users;
     });
 });

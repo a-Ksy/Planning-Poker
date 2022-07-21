@@ -14,7 +14,6 @@ const (
 	RevealCardsAction = "reveal-cards"
 	StartNewVotingAction = "start-new-voting"
 	NewVotingStartedAction = "new-voting-started"
-	IsAFKAction = "is-afk"
 
 )
 
