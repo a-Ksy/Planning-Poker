@@ -31,6 +31,7 @@ export const UserCard = (props) => {
   };
 
   const userOwnsTheCard = id === user.id;
+
   const { colorMode } = useColorMode();
   const borderColor = { light: "blackAlpha.200", dark: "blackAlpha.400" };
 
@@ -78,10 +79,12 @@ export const UserCard = (props) => {
 
     return votes[user.id];
   };
+
   return (
     <Box>
       <Center>
         <Card
+          opacity={user.isAFK && 0.4}
           background={getBgBasedOnState()}
           borderWidth={getBorderWidthBasedOnState()}
           borderColor={getBorderColorBasedOnState()}
@@ -99,15 +102,15 @@ export const UserCard = (props) => {
         </Card>
       </Center>
       <Center>
-        {admin.id === user.id && (
-          <Text mr={2} fontSize="xs" mt={2}>{`👑`}</Text>
-        )}
+        {admin.id === user.id && <Text mr={2} fontSize="s" mt={2}>{`👑`}</Text>}
+        {user.isAFK && <Text mr={2} fontSize="s" mt={2}>{`😴`}</Text>}
         <Text
           isTruncated
           textAlign="center"
           mt={2}
           fontWeight="semibold"
           maxWidth="6rem"
+          opacity={user.isAFK && 0.2}
         >
           {user.name}
         </Text>
