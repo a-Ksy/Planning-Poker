@@ -6,20 +6,19 @@ import (
 )
 
 const (
-	RoomJoinedAction = "room-joined"
-	VoteSubmittedAction = "vote-submitted"
-	CardsRevealedAction = "cards-revealed"
-	RevealCardsAction = "reveal-cards"
-	StartNewVotingAction = "start-new-voting"
+	RoomJoinedAction       = "room-joined"
+	VoteSubmittedAction    = "vote-submitted"
+	CardsRevealedAction    = "cards-revealed"
+	RevealCardsAction      = "reveal-cards"
+	StartNewVotingAction   = "start-new-voting"
 	NewVotingStartedAction = "new-voting-started"
-	IsAFKAction = "is-afk"
-
+	IsAFKAction            = "is-afk"
 )
 
 type Message struct {
-	Action  string     `json:"action"`
-	ClientId    string `json:"clientId"`
-	Message string     `json:"message"`
+	Action   string `json:"action"`
+	ClientId string `json:"clientId"`
+	Message  string `json:"message"`
 }
 
 func (message *Message) encode() []byte {

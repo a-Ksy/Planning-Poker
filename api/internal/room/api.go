@@ -19,8 +19,8 @@ type Controller interface {
 }
 
 type controller struct {
-	service  Service
-	logger   log.Logger
+	service Service
+	logger  log.Logger
 }
 
 func NewRoomController(service Service, logger log.Logger) Controller {

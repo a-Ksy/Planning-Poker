@@ -5,12 +5,11 @@ import (
 	"testing"
 )
 
-
 const (
-	dummyId1 = "1"
-	dummyId2 = "2"
-	dummyId3 = "3"
-	dummyId4 = "4"
+	dummyId1            = "1"
+	dummyId2            = "2"
+	dummyId3            = "3"
+	dummyId4            = "4"
 	dummyIdDoesNotExist = "DOES_NOT_EXIST"
 )
 

@@ -52,7 +52,7 @@ func TestAddUser(t *testing.T) {
 
 func TestIsFull(t *testing.T) {
 	room := Room{}
-	for i := 0 ; i < maxUsers; i++ {
+	for i := 0; i < maxUsers; i++ {
 		assert.False(t, room.IsFull())
 		room.users = append(room.users, *mockUser1)
 	}

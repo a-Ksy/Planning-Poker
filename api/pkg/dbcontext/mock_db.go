@@ -6,8 +6,7 @@ import (
 	"log"
 )
 
-
-func GetMockDb() (DBContext) {
+func GetMockDb() DBContext {
 	mr, err := miniredis.Run()
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a mock redis connection", err)

@@ -12,28 +12,28 @@ import (
 type GameState string
 
 const (
-	InProgress GameState = "IN_PROGRESS"
+	InProgress    GameState = "IN_PROGRESS"
 	CardsRevealed GameState = "CARDS_REVEALED"
 
 	maxUsers int = 12
 )
 
 type Room struct {
-	id    string      `json:"id"`
-	name  string      `json:"name"`
-	users []user.User `json:"users"`
-	admin *user.User   `json:"admin"`
-	votes vote.Votes `json:"votes"`
-	gameState GameState	`json:"gameState"`
+	id        string      `json:"id"`
+	name      string      `json:"name"`
+	users     []user.User `json:"users"`
+	admin     *user.User  `json:"admin"`
+	votes     vote.Votes  `json:"votes"`
+	gameState GameState   `json:"gameState"`
 }
 
 func NewRoom(name string) *Room {
 	return &Room{
-		id: uuid.New().String(),
-		name: name,
-		users: []user.User{},
-		admin: nil,
-		votes: vote.NewVotes(),
+		id:        uuid.New().String(),
+		name:      name,
+		users:     []user.User{},
+		admin:     nil,
+		votes:     vote.NewVotes(),
 		gameState: InProgress,
 	}
 }
