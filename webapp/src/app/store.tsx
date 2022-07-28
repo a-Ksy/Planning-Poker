@@ -34,7 +34,9 @@ const reducer = (
     action.type === "room/createRoom/fulfilled" ||
     action.type === "room/joinRoom/fulfilled"
   ) {
-    setCookies(cookieConstants.USER_KEY, action.payload["user"]);
+    setCookies(cookieConstants.USER_KEY, action.payload["user"], {
+      maxAge: 60 * 60 * 6,
+    });
     return {
       history: state.history,
       user: action.payload["user"],
