@@ -9,10 +9,10 @@ import {
 import { UserCard } from "./user/UserCard";
 import { GameTable } from "./GameTable";
 import { useAppSelector } from "../../app/hooks";
+import { User } from "../../features/user";
 
 export const GameGrid = () => {
-  const { users } = useAppSelector((state) => state.room);
-
+  const users: User[] = useAppSelector((state) => state.room.users);
   return (
     <Grid
       gap="1rem"

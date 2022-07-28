@@ -3,8 +3,6 @@ package ws
 import (
 	"encoding/json"
 	"log"
-
-	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 )
 
 const (
@@ -20,7 +18,7 @@ const (
 
 type Message struct {
 	Action  string     `json:"action"`
-	User    *user.User `json:"user"`
+	ClientId    string `json:"clientId"`
 	Message string     `json:"message"`
 }
 

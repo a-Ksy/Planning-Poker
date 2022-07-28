@@ -121,25 +121,23 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 
 	log.Println("Message:", message)
 	switch message.Action {
-		case VoteSubmittedAction:
-			c.handleVoteSubmittedMessage(message)
-		case RevealCardsAction:
-			c.handleRevealCardsMessage(message)
-		case StartNewVotingAction:
-			c.handleStartNewVotingMessage(message)
+	case VoteSubmittedAction:
+		c.handleVoteSubmittedMessage(message)
+	case RevealCardsAction:
+		c.handleRevealCardsMessage(message)
+	case StartNewVotingAction:
+		c.handleStartNewVotingMessage(message)
 
 	}
 }
 
 func (c *Client) disconnect() {
 	c.game.unregister <- c
-	close(c.send)
-	c.conn.Close()
 }
 
 func (c *Client) setAsAFK() {
 	c.sendClientIsAFKMessage()
-	c.game.AFK <- c
+	c.game.setAFK <- c
 	close(c.send)
 	c.conn.Close()
 }
@@ -172,7 +170,7 @@ func (c *Client) joinGame(gameId, userId string) {
 		c.game = game
 		game.register <- c
 
-		message := Message{Action: RoomJoinedAction, User: user}
+		message := Message{Action: RoomJoinedAction, ClientId: user.GetId(), Message: user.GetName()}
 		c.game.broadcast <- &message
 	}
 }
@@ -183,7 +181,7 @@ func (c *Client) handleVoteSubmittedMessage(message Message) {
 		return
 	}
 
-	v := vote.NewVote(message.User.GetId(), value)
+	v := vote.NewVote(message.ClientId, value)
 	c.wsServer.saveVote(c.game.id, v)
 
 	if vote.IsValueAccountable(value) {
@@ -204,7 +202,7 @@ func (c *Client) handleRevealCardsMessage(message Message) {
 		return
 	}
 
-	revealedVotes := Message{Action: CardsRevealedAction, User: message.User, Message: string(votesJson)}
+	revealedVotes := Message{Action: CardsRevealedAction, ClientId: message.ClientId, Message: string(votesJson)}
 	c.game.broadcast <- &revealedVotes
 }
 
@@ -229,6 +227,6 @@ func (c *Client) sendClientIsAFKMessage() {
 		return
 	}
 
-	message := Message{Action: IsAFKAction, User: user}
+	message := Message{Action: IsAFKAction, ClientId: user.GetId()}
 	c.game.broadcast <- &message
 }

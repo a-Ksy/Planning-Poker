@@ -73,14 +73,23 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.error = true;
     })
     .addCase(roomJoined, (state, { payload }) => {
-      const prevUsers: User[] = state.users;
+      var prevUsers: User[] = state.users;
       for (const user of prevUsers) {
-        if (user.id == payload.id) {
+        if (user.id == payload.userId) {
           return;
         }
       }
-      prevUsers.push(payload);
-      state.users = prevUsers;
+
+      const userJson = {
+        id: payload.userId,
+        name: payload.username,
+        isAFK: false,
+      };
+
+      const newUser = User.fromJSON(userJson);
+
+      prevUsers.push(newUser);
+      state.users = JSON.parse(JSON.stringify(prevUsers));
     })
     .addCase(revealCards, (state, { payload }) => {
       state.revealCards = payload;
@@ -92,23 +101,23 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.gameState = payload;
     })
     .addCase(setAFK, (state, { payload }) => {
-      const users: User[] = state.users;
-      for (const user of users) {
-        if (user.id == payload.id) {
+      var users: User[] = state.users;
+      for (let user of users) {
+        if (user.id == payload) {
           user.isAFK = true;
           break;
         }
       }
-      state.users = users;
+      state.users = JSON.parse(JSON.stringify(users));
     })
     .addCase(setOnline, (state, { payload }) => {
-      const users: User[] = state.users;
-      for (const user of users) {
-        if (user.id == payload.id) {
+      var users: User[] = state.users;
+      for (let user of users) {
+        if (user.id == payload) {
           user.isAFK = false;
           break;
         }
       }
-      state.users = users;
+      state.users = JSON.parse(JSON.stringify(users));
     });
 });
