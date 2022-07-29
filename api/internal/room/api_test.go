@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/a-Ksy/Planning-Poker/backend/internal/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -90,8 +91,18 @@ func TestController_GetRoom(t *testing.T) {
 	r.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
+	// Testing unauthorized call
+	req = createRequest(http.MethodGet, fmt.Sprintf("%s/%s", "/api/room", mockRoom.GetId()), nil)
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
+
 	// Happy path
 	req = createRequest(http.MethodGet, fmt.Sprintf("%s/%s", "/api/room", mockRoom.GetId()), nil)
+	token, err := auth.GenerateToken(mockUser1, mockRoom.GetId(), false)
+	assert.NoError(t, err)
+	req.Header.Set("Authorization", token.Token)
+	
 	w = httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
