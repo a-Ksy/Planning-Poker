@@ -65,7 +65,7 @@ func (r *Room) RemoveUser(userId string) {
 		}
 	}
 
-	if r.admin.GetId() == userId {
+	if r.admin != nil && r.admin.GetId() == userId {
 		r.admin = nil
 	}
 
