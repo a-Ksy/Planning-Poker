@@ -8,6 +8,7 @@ import {
   setGameState,
   setAFK,
   setOnline,
+  removeUser,
 } from "../../features/room";
 import {
   Vote,
@@ -80,7 +81,7 @@ export const WSWrapper = (props) => {
           dispatch(setOnline(message.clientId));
           break;
         case messages.VOTE_SUBMITTED:
-          const vote: Vote = new Vote();
+          let vote: Vote = new Vote();
           vote.userId = message.clientId;
           vote.value = parseInt(message.message);
           dispatch(voteSubmitted(JSON.stringify(vote)));
@@ -100,6 +101,13 @@ export const WSWrapper = (props) => {
           break;
         case messages.IS_AFK:
           dispatch(setAFK(message.clientId));
+          break;
+        case messages.DISCONNECTED:
+          dispatch(removeUser(message.clientId));
+          vote = new Vote();
+          vote.userId = message.clientId;
+          vote.value = voteCardValues.NOT_SELECTED;
+          dispatch(voteSubmitted(JSON.stringify(vote)));
           break;
       }
     };

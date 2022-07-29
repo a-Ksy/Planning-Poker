@@ -131,13 +131,10 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 	}
 }
 
-func (c *Client) disconnect() {
-	c.game.unregister <- c
-}
-
 func (c *Client) setAsAFK() {
 	c.sendClientIsAFKMessage()
 	c.game.setAFK <- c
+	go c.game.disconnectAFKWithTimeout(c)
 	close(c.send)
 	c.conn.Close()
 }

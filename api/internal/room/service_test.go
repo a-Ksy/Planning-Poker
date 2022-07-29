@@ -130,3 +130,21 @@ func TestResetVotingSession(t *testing.T) {
 	assert.Equal(t, room.GetVotes(), &vote.Votes{})
 	assert.Equal(t, room.GetGameState(), InProgress)
 }
+
+func TestRemoveUser(t *testing.T) {
+	setupUnitTest()
+
+	nonExistingRoom := NewRoom(mockRoomName)
+	err := mockService.RemoveUser(nonExistingRoom.GetId(), mockUser1.GetId())
+	assert.Error(t, err)
+
+	err = mockService.RemoveUser(mockRoomId, mockUser2.GetId())
+	assert.NoError(t, err)
+
+	room, err := mockService.GetRoom(mockRoomId)
+	assert.NoError(t, err)
+
+	removedUser, err := room.GetUserWithId(mockUser2.GetId())
+	assert.Nil(t, removedUser)
+	assert.Error(t, err)
+}

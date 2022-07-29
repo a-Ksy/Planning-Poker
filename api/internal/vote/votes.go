@@ -23,6 +23,10 @@ func (v Votes) GetVote(userId string) (int, error) {
 	return val, nil
 }
 
+func (v Votes) RemoveVote(userId string) {
+	delete(v, userId)
+}
+
 func (v Votes) HideVotesExceptUserId(userId string) {
 	for id, val := range v {
 		if userId == id {

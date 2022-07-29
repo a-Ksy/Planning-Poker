@@ -26,7 +26,6 @@ func newGame(id string) *Game {
 		id:         id,
 		clients:    make(map[*Client]bool),
 		register:   make(chan *Client),
-		unregister: make(chan *Client),
 		setAFK:     make(chan *Client),
 		broadcast:  make(chan *Message),
 	}
@@ -34,14 +33,11 @@ func newGame(id string) *Game {
 
 func (game *Game) runGame() {
 	go game.subscribe()
-	// go game.disconnectAFKs()
 
 	for {
 		select {
 		case client := <-game.register:
 			game.registerClient(client)
-		case client := <-game.unregister:
-			game.unregisterClient(client)
 		case client := <-game.setAFK:
 			game.setClientAFK(client)
 		case message := <-game.broadcast:
@@ -51,9 +47,6 @@ func (game *Game) runGame() {
 }
 
 func (game *Game) registerClient(client *Client) {
-	game.mu.Lock()
-	defer game.mu.Unlock()
-
 	game.clients[client] = true
 	for c, isOnline := range game.clients {
 		if c.id == client.id && c.conn != client.conn {
@@ -73,6 +66,9 @@ func (game *Game) registerClient(client *Client) {
 }
 
 func (game *Game) unregisterClient(client *Client) {
+	game.mu.Lock()
+	defer game.mu.Unlock()
+
 	if _, ok := game.clients[client]; ok {
 		delete(game.clients, client)
 	}
@@ -99,6 +95,10 @@ func (game *Game) subscribe() {
 }
 
 func (game *Game) broadcastMessage(message []byte) {
+	game.mu.Lock()
+	defer game.mu.Unlock()
+
+
 	for client, isOnline := range game.clients {
 		if isOnline {
 			client.send <- message
@@ -106,12 +106,19 @@ func (game *Game) broadcastMessage(message []byte) {
 	}
 }
 
-func (game *Game) disconnectAFKs() {
-	for client, isOnline := range game.clients {
+func (game *Game) disconnectAFKWithTimeout(client *Client) {
+	time.Sleep(maxAFKDuration)
+
+	if isOnline, ok := game.clients[client]; ok {
 		if !isOnline {
-			client.disconnect()
-			// todo: remove from game
+			client.wsServer.removeUser(game.id, client.id)
+			game.unregisterClient(client)
+
+			disconnectMessage := &Message{
+				Action:   DisconnectedAction,
+				ClientId: client.id,
+			}
+			game.broadcastMessage(disconnectMessage.encode())
 		}
 	}
-	time.Sleep(maxAFKDuration)
 }

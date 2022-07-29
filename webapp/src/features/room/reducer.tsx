@@ -10,8 +10,10 @@ import {
   setGameState,
   setAFK,
   setOnline,
+  removeUser,
 } from "./actions";
-import { gameStates } from "../../constants";
+import { gameStates, cookieConstants } from "../../constants";
+import { removeCookies } from "cookies-next";
 
 type RoomState = {
   id: string;
@@ -60,6 +62,8 @@ export const roomReducer = createReducer(initialState, (builder) => {
     .addCase(getRoom.rejected, (state) => {
       state.pending = false;
       state.error = true;
+      removeCookies(cookieConstants.USER_KEY);
+      document.location.reload();
     })
     .addCase(joinRoom.fulfilled, (state, { payload }) => {
       // The payload is set in the combinedReducer as it contains both user and room information
@@ -119,5 +123,11 @@ export const roomReducer = createReducer(initialState, (builder) => {
         }
       }
       state.users = JSON.parse(JSON.stringify(users));
+    })
+    .addCase(removeUser, (state, { payload }) => {
+      var filteredUsers: User[] = state.users.filter(
+        (user) => user.id != payload
+      );
+      state.users = JSON.parse(JSON.stringify(filteredUsers));
     });
 });

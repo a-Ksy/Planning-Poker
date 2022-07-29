@@ -83,6 +83,11 @@ func (c *controller) GetRoom(ctx *gin.Context) {
 		return
 	}
 
+	_, err = room.GetUserWithId(userId)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
+	}
+
 	c.logger.Info(fmt.Sprintln("Found room:", room))
 	ctx.AbortWithStatusJSON(http.StatusOK, &room)
 }

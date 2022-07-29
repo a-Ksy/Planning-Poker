@@ -16,6 +16,7 @@ type Service interface {
 	SetVote(roomId string, vote *vote.Vote) error
 	SetGameState(roomId string, gameState GameState) error
 	ResetVotingSession(roomId string) error
+	RemoveUser(roomId string, userId string) error
 }
 
 type service struct {
@@ -93,11 +94,7 @@ func (s *service) SetVote(roomId string, vote *vote.Vote) error {
 	}
 
 	room.GetVotes().SetVote(vote)
-	err = s.roomRepository.SetRoom(room)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.roomRepository.SetRoom(room)
 }
 
 func (s *service) SetGameState(roomId string, gameState GameState) error {
@@ -107,11 +104,7 @@ func (s *service) SetGameState(roomId string, gameState GameState) error {
 	}
 
 	room.SetGameState(gameState)
-	err = s.roomRepository.SetRoom(room)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.roomRepository.SetRoom(room)
 }
 
 func (s *service) ResetVotingSession(roomId string) error {
@@ -123,9 +116,15 @@ func (s *service) ResetVotingSession(roomId string) error {
 	room.SetGameState(InProgress)
 	room.ResetVotes()
 
-	err = s.roomRepository.SetRoom(room)
+	return s.roomRepository.SetRoom(room)
+}
+
+func (s *service) RemoveUser(roomId string, userId string) error {
+	room, err := s.GetRoom(roomId)
 	if err != nil {
 		return err
 	}
-	return nil
+	room.RemoveUser(userId)
+
+	return s.roomRepository.SetRoom(room)
 }

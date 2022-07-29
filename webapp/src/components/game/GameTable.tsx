@@ -11,7 +11,10 @@ export const GameTable = () => {
 
   const hasAnyoneVoted = () => {
     for (const [_, vote] of Object.entries(votes)) {
-      if (vote !== voteCardValues.NOT_SELECTED) {
+      if (
+        vote !== voteCardValues.NOT_SELECTED &&
+        vote !== voteCardValues.EMPTY
+      ) {
         return true;
       }
     }

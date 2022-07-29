@@ -57,6 +57,21 @@ func (r *Room) AddUser(user *user.User) {
 	r.users = append(r.users, *user)
 }
 
+func (r *Room) RemoveUser(userId string) {
+	for i, user := range r.users {
+		if user.GetId() == userId {
+			r.users = append(r.users[:i], r.users[i + 1:]...)
+			break
+		}
+	}
+
+	if r.admin.GetId() == userId {
+		r.admin = nil
+	}
+
+	r.votes.RemoveVote(userId)
+}
+
 func (r *Room) IsFull() bool {
 	return len(r.users) >= maxUsers
 }

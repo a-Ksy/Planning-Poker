@@ -43,6 +43,13 @@ func TestGetVote(t *testing.T) {
 	assert.Equal(t, 13, val)
 }
 
+func TestRemoveVote(t *testing.T) {
+	var votes Votes = map[string]int{dummyId1: 13, dummyId2: 1, dummyId3: 2}
+	votes.RemoveVote(dummyId1)
+	var expectedVotes Votes = map[string]int{dummyId2: 1, dummyId3: 2}
+	assert.Equal(t, expectedVotes, votes)
+}
+
 func TestHideVotesExceptUserId(t *testing.T) {
 	var votes Votes = map[string]int{dummyId1: 13, dummyId2: 1, dummyId3: 2}
 

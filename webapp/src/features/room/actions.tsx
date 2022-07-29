@@ -51,3 +51,5 @@ export const setGameState = createAction<string>("room/setGameState");
 export const setAFK = createAction<string>("room/setAFK");
 
 export const setOnline = createAction<string>("room/setOnline");
+
+export const removeUser = createAction<string>("room/removeUser");
