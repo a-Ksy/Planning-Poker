@@ -92,7 +92,7 @@ func (c *Client) writePump() {
 
 func (c *Client) readPump() {
 	defer func() {
-		c.disconnect()
+		c.setAsAFK()
 	}()
 
 	c.conn.SetReadLimit(maxMessageSize)
