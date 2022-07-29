@@ -69,9 +69,9 @@ func (s *WSServer) revealCards(roomId string) (*vote.Votes, error) {
 }
 
 func (s *WSServer) resetVotingSession(roomId string) error {
-	err := s.roomService.ResetVotingSession(roomId)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.roomService.ResetVotingSession(roomId)
+}
+
+func (s *WSServer) removeUser(roomId string, userId string) error {
+	return s.roomService.RemoveUser(roomId, userId)
 }

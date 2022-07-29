@@ -2,7 +2,7 @@ package vote
 
 type Vote struct {
 	UserId string
-	Value int
+	Value  int
 }
 
 func NewVote(userId string, value int) *Vote {

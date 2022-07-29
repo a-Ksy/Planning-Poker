@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	dummyId = "123"
+	dummyId   = "123"
 	dummyName = "Atahan"
 )
 

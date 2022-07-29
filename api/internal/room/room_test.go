@@ -50,9 +50,19 @@ func TestAddUser(t *testing.T) {
 	assert.Equal(t, expected, room)
 }
 
+func TestRemoveUser(t *testing.T) {
+	room := Room{users: []user.User{*mockUser1}, admin: mockUser1, votes: vote.NewVotes()}
+	room.votes.SetVote(vote.NewVote(mockUser1.GetId(), mockVoteValue2))
+
+	expected := Room{users: []user.User{}, admin: nil, votes: vote.NewVotes()}
+
+	room.RemoveUser(mockUser1.GetId())
+	assert.Equal(t, expected, room)
+}
+
 func TestIsFull(t *testing.T) {
 	room := Room{}
-	for i := 0 ; i < maxUsers; i++ {
+	for i := 0; i < maxUsers; i++ {
 		assert.False(t, room.IsFull())
 		room.users = append(room.users, *mockUser1)
 	}

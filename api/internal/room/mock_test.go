@@ -12,7 +12,7 @@ import (
 
 const (
 	mockRoomId          = "1"
-	mockRoomId2 		= "2"
+	mockRoomId2         = "2"
 	mockRoomName        = "sprint-planning"
 	mockInvalidRoomName = "5mQ9zPhHNVWNJIJGrdw0qkXlIartvTT"
 	mockUsername1       = "Michael"
@@ -78,7 +78,7 @@ func setupUnitTest() {
 	mockRoom.GetVotes().SetVote(vote.NewVote(mockUser1.GetId(), mockVoteValue1))
 	mockRoom.GetVotes().SetVote(vote.NewVote(mockUser2.GetId(), mockVoteValue2))
 
-	for i := 0; i < maxUsers - 1; i++ {
+	for i := 0; i < maxUsers-1; i++ {
 		mockFullRoom.AddUser(user.NewUser(fmt.Sprint(i)))
 	}
 

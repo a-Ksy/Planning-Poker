@@ -20,6 +20,6 @@ var voteValues = map[int]bool{
 	13:          true,
 	21:          true,
 	34:          true,
-	55: true,
-	89: true,
+	55:          true,
+	89:          true,
 }

@@ -19,8 +19,8 @@ type Controller interface {
 }
 
 type controller struct {
-	service  Service
-	logger   log.Logger
+	service Service
+	logger  log.Logger
 }
 
 func NewRoomController(service Service, logger log.Logger) Controller {
@@ -81,6 +81,11 @@ func (c *controller) GetRoom(ctx *gin.Context) {
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, err)
 		return
+	}
+
+	_, err = room.GetUserWithId(userId)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
 	}
 
 	c.logger.Info(fmt.Sprintln("Found room:", room))

@@ -7,12 +7,12 @@ import (
 )
 
 type RoomDto struct {
-	Id    string      `json:"id"`
-	Name  string      `json:"name"`
-	Users []user.User `json:"users"`
-	Admin *user.User   `json:"admin"`
-	Votes vote.Votes `json:"votes"`
-	GameState GameState `json:"gameState"`
+	Id        string      `json:"id"`
+	Name      string      `json:"name"`
+	Users     []user.User `json:"users"`
+	Admin     *user.User  `json:"admin"`
+	Votes     vote.Votes  `json:"votes"`
+	GameState GameState   `json:"gameState"`
 }
 
 type RoomCreation struct {

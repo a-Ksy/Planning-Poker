@@ -38,10 +38,18 @@ export const joinRoom = createAsyncThunk(
   }
 );
 
-export const roomJoined = createAction<User>("room/roomJoined");
+export const roomJoined = createAction<{ userId: string; username: string }>(
+  "room/roomJoined"
+);
 
 export const revealCards = createAction<boolean>("room/revealCards");
 
 export const resetVoting = createAction<boolean>("room/resetVoting");
 
 export const setGameState = createAction<string>("room/setGameState");
+
+export const setAFK = createAction<string>("room/setAFK");
+
+export const setOnline = createAction<string>("room/setOnline");
+
+export const removeUser = createAction<string>("room/removeUser");

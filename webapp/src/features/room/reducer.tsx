@@ -8,8 +8,12 @@ import {
   roomJoined,
   resetVoting,
   setGameState,
+  setAFK,
+  setOnline,
+  removeUser,
 } from "./actions";
-import { gameStates } from "../../constants";
+import { gameStates, cookieConstants } from "../../constants";
+import { removeCookies } from "cookies-next";
 
 type RoomState = {
   id: string;
@@ -58,6 +62,8 @@ export const roomReducer = createReducer(initialState, (builder) => {
     .addCase(getRoom.rejected, (state) => {
       state.pending = false;
       state.error = true;
+      removeCookies(cookieConstants.USER_KEY);
+      document.location.reload();
     })
     .addCase(joinRoom.fulfilled, (state, { payload }) => {
       // The payload is set in the combinedReducer as it contains both user and room information
@@ -71,14 +77,23 @@ export const roomReducer = createReducer(initialState, (builder) => {
       state.error = true;
     })
     .addCase(roomJoined, (state, { payload }) => {
-      const prevUsers: User[] = state.users;
+      var prevUsers: User[] = state.users;
       for (const user of prevUsers) {
-        if (user.id == payload.id) {
+        if (user.id == payload.userId) {
           return;
         }
       }
-      prevUsers.push(payload);
-      state.users = prevUsers;
+
+      const userJson = {
+        id: payload.userId,
+        name: payload.username,
+        isAFK: false,
+      };
+
+      const newUser = User.fromJSON(userJson);
+
+      prevUsers.push(newUser);
+      state.users = JSON.parse(JSON.stringify(prevUsers));
     })
     .addCase(revealCards, (state, { payload }) => {
       state.revealCards = payload;
@@ -88,5 +103,31 @@ export const roomReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setGameState, (state, { payload }) => {
       state.gameState = payload;
+    })
+    .addCase(setAFK, (state, { payload }) => {
+      var users: User[] = state.users;
+      for (let user of users) {
+        if (user.id == payload) {
+          user.isAFK = true;
+          break;
+        }
+      }
+      state.users = JSON.parse(JSON.stringify(users));
+    })
+    .addCase(setOnline, (state, { payload }) => {
+      var users: User[] = state.users;
+      for (let user of users) {
+        if (user.id == payload) {
+          user.isAFK = false;
+          break;
+        }
+      }
+      state.users = JSON.parse(JSON.stringify(users));
+    })
+    .addCase(removeUser, (state, { payload }) => {
+      var filteredUsers: User[] = state.users.filter(
+        (user) => user.id != payload
+      );
+      state.users = JSON.parse(JSON.stringify(filteredUsers));
     });
 });

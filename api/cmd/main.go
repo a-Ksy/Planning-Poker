@@ -33,7 +33,7 @@ func main() {
 			http.MethodGet,
 			http.MethodPost,
 		},
-		AllowedHeaders:   []string{"*"},
+		AllowedHeaders: []string{"*"},
 	})
 	r.Use(c)
 

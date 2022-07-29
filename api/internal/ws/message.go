@@ -3,24 +3,23 @@ package ws
 import (
 	"encoding/json"
 	"log"
-
-	"github.com/a-Ksy/Planning-Poker/backend/internal/user"
 )
 
 const (
-	RoomJoinedAction = "room-joined"
-	VoteSubmittedAction = "vote-submitted"
-	CardsRevealedAction = "cards-revealed"
-	RevealCardsAction = "reveal-cards"
-	StartNewVotingAction = "start-new-voting"
+	RoomJoinedAction       = "room-joined"
+	VoteSubmittedAction    = "vote-submitted"
+	CardsRevealedAction    = "cards-revealed"
+	RevealCardsAction      = "reveal-cards"
+	StartNewVotingAction   = "start-new-voting"
 	NewVotingStartedAction = "new-voting-started"
-
+	IsAFKAction            = "is-afk"
+	DisconnectedAction = "disconnected"
 )
 
 type Message struct {
-	Action  string     `json:"action"`
-	User    *user.User `json:"user"`
-	Message string     `json:"message"`
+	Action   string `json:"action"`
+	ClientId string `json:"clientId"`
+	Message  string `json:"message"`
 }
 
 func (message *Message) encode() []byte {

@@ -32,6 +32,8 @@ export const messages = {
   CARDS_REVEALED: "cards-revealed",
   START_NEW_VOTING: "start-new-voting",
   NEW_VOTING_STARTED: "new-voting-started",
+  IS_AFK: "is-afk",
+  DISCONNECTED: "disconnected",
 };
 
 export const gameStates = {

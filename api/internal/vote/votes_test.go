@@ -5,12 +5,11 @@ import (
 	"testing"
 )
 
-
 const (
-	dummyId1 = "1"
-	dummyId2 = "2"
-	dummyId3 = "3"
-	dummyId4 = "4"
+	dummyId1            = "1"
+	dummyId2            = "2"
+	dummyId3            = "3"
+	dummyId4            = "4"
 	dummyIdDoesNotExist = "DOES_NOT_EXIST"
 )
 
@@ -42,6 +41,13 @@ func TestGetVote(t *testing.T) {
 	val, err := votes.GetVote(dummyId1)
 	assert.NoError(t, err)
 	assert.Equal(t, 13, val)
+}
+
+func TestRemoveVote(t *testing.T) {
+	var votes Votes = map[string]int{dummyId1: 13, dummyId2: 1, dummyId3: 2}
+	votes.RemoveVote(dummyId1)
+	var expectedVotes Votes = map[string]int{dummyId2: 1, dummyId3: 2}
+	assert.Equal(t, expectedVotes, votes)
 }
 
 func TestHideVotesExceptUserId(t *testing.T) {

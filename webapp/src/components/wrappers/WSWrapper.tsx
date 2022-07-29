@@ -6,6 +6,9 @@ import {
   revealCards,
   resetVoting,
   setGameState,
+  setAFK,
+  setOnline,
+  removeUser,
 } from "../../features/room";
 import {
   Vote,
@@ -23,7 +26,7 @@ import {
 } from "../../constants";
 class Message {
   action: string = "";
-  user: User = null;
+  clientId: string = null;
   message: string = "";
 
   static fromJSON(json: object): Message {
@@ -34,10 +37,14 @@ class Message {
     return JSON.stringify(this);
   };
 
-  static createMessage(user: User, action: string, message: string): Message {
+  static createMessage(
+    clientId: string,
+    action: string,
+    message: string
+  ): Message {
     const result: Message = new Message();
     result.action = action;
-    result.user = user;
+    result.clientId = clientId;
     result.message = message;
     return result;
   }
@@ -68,11 +75,14 @@ export const WSWrapper = (props) => {
 
       switch (message?.action) {
         case messages.ROOM_JOINED:
-          dispatch(roomJoined(message.user));
+          dispatch(
+            roomJoined({ userId: message.clientId, username: message.message })
+          );
+          dispatch(setOnline(message.clientId));
           break;
         case messages.VOTE_SUBMITTED:
-          const vote: Vote = new Vote();
-          vote.userId = message.user.id;
+          let vote: Vote = new Vote();
+          vote.userId = message.clientId;
           vote.value = parseInt(message.message);
           dispatch(voteSubmitted(JSON.stringify(vote)));
           break;
@@ -88,6 +98,16 @@ export const WSWrapper = (props) => {
           dispatch(resetVoting(false));
           dispatch(setVotes(new Object()));
           dispatch(selectVoteCard(voteCardValues.EMPTY));
+          break;
+        case messages.IS_AFK:
+          dispatch(setAFK(message.clientId));
+          break;
+        case messages.DISCONNECTED:
+          dispatch(removeUser(message.clientId));
+          vote = new Vote();
+          vote.userId = message.clientId;
+          vote.value = voteCardValues.NOT_SELECTED;
+          dispatch(voteSubmitted(JSON.stringify(vote)));
           break;
       }
     };
@@ -106,7 +126,7 @@ export const WSWrapper = (props) => {
 
     if (ws !== null) {
       const message: Message = Message.createMessage(
-        user,
+        user.id,
         messages.VOTE_SUBMITTED,
         voteState.selectedVoteCard.toString()
       );
@@ -124,7 +144,7 @@ export const WSWrapper = (props) => {
     }
     if (ws !== null) {
       const message: Message = Message.createMessage(
-        user,
+        user.id,
         messages.REVEAL_CARDS,
         ""
       );
@@ -142,7 +162,7 @@ export const WSWrapper = (props) => {
     }
     if (ws !== null) {
       const message: Message = Message.createMessage(
-        user,
+        user.id,
         messages.START_NEW_VOTING,
         ""
       );
