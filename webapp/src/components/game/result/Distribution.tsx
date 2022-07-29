@@ -35,7 +35,7 @@ export const Distribution = () => {
       <Grid templateColumns={`repeat(${voteDistribution.length}, 1fr)`} gap={3}>
         {voteDistribution.map(([vote, num]) => {
           return (
-            <Box alignItems="center" opacity={vote === "?" && "0.5"}>
+            <Box key={vote} alignItems="center" opacity={vote === "?" && "0.5"}>
               <Center>
                 <Card
                   h="4.5rem"
