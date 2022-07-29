@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	maxAFKDuration = 2 * time.Minute
+	maxAFKDuration = 1 * time.Minute
 )
 
 type Game struct {
