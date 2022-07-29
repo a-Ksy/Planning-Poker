@@ -131,7 +131,7 @@ func TestResetVotingSession(t *testing.T) {
 	assert.Equal(t, room.GetGameState(), InProgress)
 }
 
-func TestRemoveUser(t *testing.T) {
+func TestService_RemoveUser(t *testing.T) {
 	setupUnitTest()
 
 	nonExistingRoom := NewRoom(mockRoomName)
