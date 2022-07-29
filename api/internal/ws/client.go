@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/a-Ksy/Planning-Poker/backend/internal/vote"
 	"log"
 	"net/http"
@@ -120,7 +119,7 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 		return
 	}
 
-	fmt.Println(message)
+	log.Println("Message:", message)
 	switch message.Action {
 	case VoteSubmittedAction:
 		c.handleVoteSubmittedMessage(message)
