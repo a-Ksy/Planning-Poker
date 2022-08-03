@@ -102,7 +102,9 @@ export const UserCard = (props) => {
         </Card>
       </Center>
       <Center>
-        {admin.id === user.id && <Text mr={2} fontSize="s" mt={2}>{`👑`}</Text>}
+        {admin?.id === user.id && (
+          <Text mr={2} fontSize="s" mt={2}>{`👑`}</Text>
+        )}
         {user.isAFK && <Text mr={2} fontSize="s" mt={2}>{`😴`}</Text>}
         <Text
           isTruncated
