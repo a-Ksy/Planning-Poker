@@ -34,6 +34,8 @@ export const messages = {
   NEW_VOTING_STARTED: "new-voting-started",
   IS_AFK: "is-afk",
   DISCONNECTED: "disconnected",
+  KICK_USER: "kick",
+  USER_KICKED: "client-kicked",
 };
 
 export const gameStates = {

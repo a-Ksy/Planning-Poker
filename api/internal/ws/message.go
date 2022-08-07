@@ -13,7 +13,8 @@ const (
 	StartNewVotingAction   = "start-new-voting"
 	NewVotingStartedAction = "new-voting-started"
 	IsAFKAction            = "is-afk"
-	DisconnectedAction = "disconnected"
+	DisconnectedAction     = "disconnected"
+	KickAction             = "kick"
 )
 
 type Message struct {

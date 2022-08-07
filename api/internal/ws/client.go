@@ -132,7 +132,8 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 		c.handleRevealCardsMessage(message)
 	case StartNewVotingAction:
 		c.handleStartNewVotingMessage(message)
-
+	case KickAction:
+		c.handleKickMessage(message)
 	}
 }
 
@@ -206,6 +207,25 @@ func (c *Client) handleRevealCardsMessage(message Message) {
 
 	revealedVotes := Message{Action: CardsRevealedAction, ClientId: message.ClientId, Message: string(votesJson)}
 	c.game.broadcast <- &revealedVotes
+}
+
+func (c *Client) handleKickMessage(message Message) {
+	room, err := c.wsServer.roomService.GetRoom(c.game.id)
+	if err != nil {
+		return
+	}
+
+	if room.GetAdmin() != nil && room.GetAdmin().GetId() != c.id {
+		return
+	}
+
+	err = c.wsServer.removeUser(c.game.id, message.Message)
+	if err != nil {
+		return
+	}
+
+	clientKickedMessage := Message{Action: DisconnectedAction, ClientId: message.Message}
+	c.game.broadcast <- &clientKickedMessage
 }
 
 func (c *Client) handleStartNewVotingMessage(message Message) {

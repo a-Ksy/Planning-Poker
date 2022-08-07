@@ -1,5 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+
 import {
   Room,
   roomJoined,
@@ -9,6 +11,7 @@ import {
   setAFK,
   setOnline,
   removeUser,
+  setKickedUserId,
 } from "../../features/room";
 import {
   Vote,
@@ -52,6 +55,8 @@ class Message {
 }
 
 export const WSWrapper = (props) => {
+  const router = useRouter();
+
   const isBrowser = typeof window !== "undefined";
   const userState: User = useAppSelector((state) => state.user);
   const roomState: Room = useAppSelector((state) => state.room);
@@ -111,10 +116,15 @@ export const WSWrapper = (props) => {
             break;
           case messages.DISCONNECTED:
             dispatch(removeUser(message.clientId));
+            if (message.clientId === user.id) {
+              router.push("/kicked");
+              return;
+            }
             vote = new Vote();
             vote.userId = message.clientId;
             vote.value = voteCardValues.NOT_SELECTED;
             dispatch(voteSubmitted(JSON.stringify(vote)));
+            dispatch(setKickedUserId(null));
             break;
         }
       }
@@ -177,6 +187,25 @@ export const WSWrapper = (props) => {
       ws.send(message.toString());
     }
   }, [roomState.resetVoting]);
+
+  // send kick user request
+  useEffect(() => {
+    if (
+      roomState.kickedUserId === null ||
+      roomState.kickedUserId === undefined ||
+      roomState.kickedUserId === ""
+    ) {
+      return;
+    }
+    if (ws !== null) {
+      const message: Message = Message.createMessage(
+        user.id,
+        messages.KICK_USER,
+        roomState.kickedUserId
+      );
+      ws.send(message.toString());
+    }
+  }, [roomState.kickedUserId]);
 
   return <>{props.children}</>;
 };
