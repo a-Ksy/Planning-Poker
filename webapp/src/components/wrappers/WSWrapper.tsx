@@ -1,5 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+
 import {
   Room,
   roomJoined,
@@ -9,6 +11,7 @@ import {
   setAFK,
   setOnline,
   removeUser,
+  setKickedUserId,
 } from "../../features/room";
 import {
   Vote,
@@ -24,6 +27,7 @@ import {
   voteCardValues,
   gameStates,
 } from "../../constants";
+
 class Message {
   action: string = "";
   clientId: string = null;
@@ -51,6 +55,8 @@ class Message {
 }
 
 export const WSWrapper = (props) => {
+  const router = useRouter();
+
   const isBrowser = typeof window !== "undefined";
   const userState: User = useAppSelector((state) => state.user);
   const roomState: Room = useAppSelector((state) => state.room);
@@ -71,44 +77,56 @@ export const WSWrapper = (props) => {
   // read messages from WebSocket
   if (ws !== null) {
     ws.onmessage = (event: MessageEvent) => {
-      const message: Message = Message.fromJSON(JSON.parse(event.data));
+      const events = JSON.parse(event.data);
 
-      switch (message?.action) {
-        case messages.ROOM_JOINED:
-          dispatch(
-            roomJoined({ userId: message.clientId, username: message.message })
-          );
-          dispatch(setOnline(message.clientId));
-          break;
-        case messages.VOTE_SUBMITTED:
-          let vote: Vote = new Vote();
-          vote.userId = message.clientId;
-          vote.value = parseInt(message.message);
-          dispatch(voteSubmitted(JSON.stringify(vote)));
-          break;
-        case messages.CARDS_REVEALED:
-          const votes = JSON.parse(message.message);
-          dispatch(setGameState(gameStates.CARDS_REVEALED));
-          dispatch(revealCards(true));
-          dispatch(setVotes(votes));
-          break;
-        case messages.NEW_VOTING_STARTED:
-          dispatch(setGameState(gameStates.IN_PROGRESS));
-          dispatch(revealCards(false));
-          dispatch(resetVoting(false));
-          dispatch(setVotes(new Object()));
-          dispatch(selectVoteCard(voteCardValues.EMPTY));
-          break;
-        case messages.IS_AFK:
-          dispatch(setAFK(message.clientId));
-          break;
-        case messages.DISCONNECTED:
-          dispatch(removeUser(message.clientId));
-          vote = new Vote();
-          vote.userId = message.clientId;
-          vote.value = voteCardValues.NOT_SELECTED;
-          dispatch(voteSubmitted(JSON.stringify(vote)));
-          break;
+      for (const event of events) {
+        const message = Message.fromJSON(event);
+
+        switch (message.action) {
+          case messages.ROOM_JOINED:
+            dispatch(
+              roomJoined({
+                userId: message.clientId,
+                username: message.message,
+              })
+            );
+            dispatch(setOnline(message.clientId));
+            break;
+          case messages.VOTE_SUBMITTED:
+            let vote: Vote = new Vote();
+            vote.userId = message.clientId;
+            vote.value = parseInt(message.message);
+            dispatch(voteSubmitted(JSON.stringify(vote)));
+            break;
+          case messages.CARDS_REVEALED:
+            const votes = JSON.parse(message.message);
+            dispatch(setGameState(gameStates.CARDS_REVEALED));
+            dispatch(revealCards(true));
+            dispatch(setVotes(votes));
+            break;
+          case messages.NEW_VOTING_STARTED:
+            dispatch(setGameState(gameStates.IN_PROGRESS));
+            dispatch(revealCards(false));
+            dispatch(resetVoting(false));
+            dispatch(setVotes(new Object()));
+            dispatch(selectVoteCard(voteCardValues.EMPTY));
+            break;
+          case messages.IS_AFK:
+            dispatch(setAFK(message.clientId));
+            break;
+          case messages.DISCONNECTED:
+            dispatch(removeUser(message.clientId));
+            if (message.clientId === user.id) {
+              router.push("/kicked");
+              return;
+            }
+            vote = new Vote();
+            vote.userId = message.clientId;
+            vote.value = voteCardValues.NOT_SELECTED;
+            dispatch(voteSubmitted(JSON.stringify(vote)));
+            dispatch(setKickedUserId(null));
+            break;
+        }
       }
     };
   }
@@ -169,6 +187,25 @@ export const WSWrapper = (props) => {
       ws.send(message.toString());
     }
   }, [roomState.resetVoting]);
+
+  // send kick user request
+  useEffect(() => {
+    if (
+      roomState.kickedUserId === null ||
+      roomState.kickedUserId === undefined ||
+      roomState.kickedUserId === ""
+    ) {
+      return;
+    }
+    if (ws !== null) {
+      const message: Message = Message.createMessage(
+        user.id,
+        messages.KICK_USER,
+        roomState.kickedUserId
+      );
+      ws.send(message.toString());
+    }
+  }, [roomState.kickedUserId]);
 
   return <>{props.children}</>;
 };

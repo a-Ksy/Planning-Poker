@@ -11,6 +11,7 @@ import {
   setAFK,
   setOnline,
   removeUser,
+  setKickedUserId,
 } from "./actions";
 import { gameStates, cookieConstants } from "../../constants";
 import { removeCookies } from "cookies-next";
@@ -21,6 +22,7 @@ type RoomState = {
   users: User[];
   admin: User;
   gameState: string;
+  kickedUserId: string;
   revealCards: boolean;
   resetVoting: boolean;
   pending: boolean;
@@ -33,6 +35,7 @@ const initialState: RoomState = {
   users: null,
   admin: null,
   gameState: gameStates.IN_PROGRESS,
+  kickedUserId: null,
   revealCards: false,
   resetVoting: false,
   pending: false,
@@ -129,5 +132,8 @@ export const roomReducer = createReducer(initialState, (builder) => {
         (user) => user.id != payload
       );
       state.users = JSON.parse(JSON.stringify(filteredUsers));
+    })
+    .addCase(setKickedUserId, (state, { payload }) => {
+      state.kickedUserId = payload;
     });
 });

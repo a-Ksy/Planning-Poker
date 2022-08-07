@@ -8,4 +8,5 @@ export class Room {
   revealCards: boolean = false;
   resetVoting: boolean = false;
   gameState: string = gameStates.IN_PROGRESS;
+  kickedUserId: string = null;
 }

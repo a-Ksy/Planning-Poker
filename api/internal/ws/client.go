@@ -20,8 +20,8 @@ const (
 )
 
 var (
-	newline = []byte{'\n'}
-	space   = []byte{' '}
+	openingBracket = []byte{'['}
+	closingBracket = []byte{']'}
 )
 
 var upgrader = websocket.Upgrader{
@@ -68,18 +68,23 @@ func (c *Client) writePump() {
 			if err != nil {
 				return
 			}
+
+			w.Write(openingBracket)
 			w.Write(message)
 
-			// Attach queued chat messages to the current websocket message.
+			// If there are multiple messages in the queue, attach them together
 			n := len(c.send)
 			for i := 0; i < n; i++ {
-				w.Write(newline)
+				w.Write([]byte(","))
 				w.Write(<-c.send)
 			}
+
+			w.Write(closingBracket)
 
 			if err := w.Close(); err != nil {
 				return
 			}
+
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
@@ -127,7 +132,8 @@ func (c *Client) handleNewMessage(jsonMessage []byte) {
 		c.handleRevealCardsMessage(message)
 	case StartNewVotingAction:
 		c.handleStartNewVotingMessage(message)
-
+	case KickAction:
+		c.handleKickMessage(message)
 	}
 }
 
@@ -201,6 +207,25 @@ func (c *Client) handleRevealCardsMessage(message Message) {
 
 	revealedVotes := Message{Action: CardsRevealedAction, ClientId: message.ClientId, Message: string(votesJson)}
 	c.game.broadcast <- &revealedVotes
+}
+
+func (c *Client) handleKickMessage(message Message) {
+	room, err := c.wsServer.roomService.GetRoom(c.game.id)
+	if err != nil {
+		return
+	}
+
+	if room.GetAdmin() != nil && room.GetAdmin().GetId() != c.id {
+		return
+	}
+
+	err = c.wsServer.removeUser(c.game.id, message.Message)
+	if err != nil {
+		return
+	}
+
+	clientKickedMessage := Message{Action: DisconnectedAction, ClientId: message.Message}
+	c.game.broadcast <- &clientKickedMessage
 }
 
 func (c *Client) handleStartNewVotingMessage(message Message) {
