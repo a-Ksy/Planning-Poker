@@ -20,8 +20,8 @@ const (
 )
 
 var (
-	newline = []byte{'\n'}
-	space   = []byte{' '}
+	openingBracket = []byte{'['}
+	closingBracket = []byte{']'}
 )
 
 var upgrader = websocket.Upgrader{
@@ -68,18 +68,23 @@ func (c *Client) writePump() {
 			if err != nil {
 				return
 			}
+
+			w.Write(openingBracket)
 			w.Write(message)
 
-			// Attach queued chat messages to the current websocket message.
+			// If there are multiple messages in the queue, attach them together
 			n := len(c.send)
 			for i := 0; i < n; i++ {
-				w.Write(newline)
+				w.Write([]byte(","))
 				w.Write(<-c.send)
 			}
+
+			w.Write(closingBracket)
 
 			if err := w.Close(); err != nil {
 				return
 			}
+
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {

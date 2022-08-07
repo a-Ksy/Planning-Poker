@@ -24,6 +24,7 @@ import {
   voteCardValues,
   gameStates,
 } from "../../constants";
+
 class Message {
   action: string = "";
   clientId: string = null;
@@ -71,44 +72,51 @@ export const WSWrapper = (props) => {
   // read messages from WebSocket
   if (ws !== null) {
     ws.onmessage = (event: MessageEvent) => {
-      const message: Message = Message.fromJSON(JSON.parse(event.data));
+      const events = JSON.parse(event.data);
 
-      switch (message?.action) {
-        case messages.ROOM_JOINED:
-          dispatch(
-            roomJoined({ userId: message.clientId, username: message.message })
-          );
-          dispatch(setOnline(message.clientId));
-          break;
-        case messages.VOTE_SUBMITTED:
-          let vote: Vote = new Vote();
-          vote.userId = message.clientId;
-          vote.value = parseInt(message.message);
-          dispatch(voteSubmitted(JSON.stringify(vote)));
-          break;
-        case messages.CARDS_REVEALED:
-          const votes = JSON.parse(message.message);
-          dispatch(setGameState(gameStates.CARDS_REVEALED));
-          dispatch(revealCards(true));
-          dispatch(setVotes(votes));
-          break;
-        case messages.NEW_VOTING_STARTED:
-          dispatch(setGameState(gameStates.IN_PROGRESS));
-          dispatch(revealCards(false));
-          dispatch(resetVoting(false));
-          dispatch(setVotes(new Object()));
-          dispatch(selectVoteCard(voteCardValues.EMPTY));
-          break;
-        case messages.IS_AFK:
-          dispatch(setAFK(message.clientId));
-          break;
-        case messages.DISCONNECTED:
-          dispatch(removeUser(message.clientId));
-          vote = new Vote();
-          vote.userId = message.clientId;
-          vote.value = voteCardValues.NOT_SELECTED;
-          dispatch(voteSubmitted(JSON.stringify(vote)));
-          break;
+      for (const event of events) {
+        const message = Message.fromJSON(event);
+
+        switch (message.action) {
+          case messages.ROOM_JOINED:
+            dispatch(
+              roomJoined({
+                userId: message.clientId,
+                username: message.message,
+              })
+            );
+            dispatch(setOnline(message.clientId));
+            break;
+          case messages.VOTE_SUBMITTED:
+            let vote: Vote = new Vote();
+            vote.userId = message.clientId;
+            vote.value = parseInt(message.message);
+            dispatch(voteSubmitted(JSON.stringify(vote)));
+            break;
+          case messages.CARDS_REVEALED:
+            const votes = JSON.parse(message.message);
+            dispatch(setGameState(gameStates.CARDS_REVEALED));
+            dispatch(revealCards(true));
+            dispatch(setVotes(votes));
+            break;
+          case messages.NEW_VOTING_STARTED:
+            dispatch(setGameState(gameStates.IN_PROGRESS));
+            dispatch(revealCards(false));
+            dispatch(resetVoting(false));
+            dispatch(setVotes(new Object()));
+            dispatch(selectVoteCard(voteCardValues.EMPTY));
+            break;
+          case messages.IS_AFK:
+            dispatch(setAFK(message.clientId));
+            break;
+          case messages.DISCONNECTED:
+            dispatch(removeUser(message.clientId));
+            vote = new Vote();
+            vote.userId = message.clientId;
+            vote.value = voteCardValues.NOT_SELECTED;
+            dispatch(voteSubmitted(JSON.stringify(vote)));
+            break;
+        }
       }
     };
   }
