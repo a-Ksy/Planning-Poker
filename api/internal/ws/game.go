@@ -2,13 +2,14 @@ package ws
 
 import (
 	"context"
-	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
 	"sync"
 	"time"
+
+	"github.com/a-Ksy/Planning-Poker/backend/pkg/config"
 )
 
 const (
-	maxAFKDuration = 1 * time.Minute
+	maxAFKDuration = 5 * time.Minute
 )
 
 type Game struct {
@@ -23,11 +24,11 @@ type Game struct {
 
 func newGame(id string) *Game {
 	return &Game{
-		id:         id,
-		clients:    make(map[*Client]bool),
-		register:   make(chan *Client),
-		setAFK:     make(chan *Client),
-		broadcast:  make(chan *Message),
+		id:        id,
+		clients:   make(map[*Client]bool),
+		register:  make(chan *Client),
+		setAFK:    make(chan *Client),
+		broadcast: make(chan *Message),
 	}
 }
 
@@ -97,7 +98,6 @@ func (game *Game) subscribe() {
 func (game *Game) broadcastMessage(message []byte) {
 	game.mu.Lock()
 	defer game.mu.Unlock()
-
 
 	for client, isOnline := range game.clients {
 		if isOnline {
