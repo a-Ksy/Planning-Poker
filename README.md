@@ -6,6 +6,10 @@ Planning Poker 🎲
   <strong>Plan your next Sprint by voting on tasks!</strong>
 </p>
 
+## Important
+
+As Heroku announced to stop offering free plans (you can read more [here](https://blog.heroku.com/next-chapter)), the current deployment **DOES NOT WORK**. I will try to deploy it to somewhere else at my earliest convenience. Thank you for your patience.
+
 > ***Disclaimer***: This project is a clone of [Planning Poker Online](https://planningpokeronline.com/) and is only built for learning purposes. It doesn't have any commercial use, and shouldn't be used for such purposes.
 
 ### What it looks like?
