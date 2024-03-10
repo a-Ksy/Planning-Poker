@@ -22,13 +22,14 @@ jobs:
           node-version: '20.x'
 
       - name: npm install, build, and test
+        working-directory: ./webapp  # Change this line to the correct folder
         run: |
           npm install
           npm run build --if-present
           npm run test --if-present
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip ./webapp/* -r  # Update this line to the correct folder
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -50,7 +51,7 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip release.zip -d ./webapp  # Update this line to the correct folder
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -59,4 +60,4 @@ jobs:
           app-name: 'planning-poker'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E4FCA5C506754E99AA70A499E2473D82 }}
-          package: .
+          package: ./webapp  # Update this line to the correct folder
